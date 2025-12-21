@@ -17,22 +17,22 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'John Doe | Full-Stack Developer',
-    template: '%s | John Doe',
+    default: 'Abdullah Alatrash | Senior Mobile Developer',
+    template: '%s | Abdullah Alatrash',
   },
   description:
-    'Full-stack developer passionate about building modern web applications with React, Next.js, and Node.js.',
-  keywords: ['developer', 'portfolio', 'react', 'nextjs', 'typescript', 'full-stack'],
-  authors: [{ name: 'John Doe' }],
-  creator: 'John Doe',
+    'Senior Mobile Developer specialized in building high-performance Flutter applications using clean and scalable architectures.',
+  keywords: ['developer', 'portfolio', 'flutter', 'mobile', 'dart', 'clean architecture'],
+  authors: [{ name: 'Abdullah Alatrash' }],
+  creator: 'Abdullah Alatrash',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'John Doe Portfolio',
+    siteName: 'Abdullah Alatrash Portfolio',
   },
   twitter: {
     card: 'summary_large_image',
-    creator: '@johndoe',
+    creator: '@oiu85',
   },
   robots: {
     index: true,

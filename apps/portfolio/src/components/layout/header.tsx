@@ -45,7 +45,7 @@ export function Header() {
     <header
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        isScrolled
+        isScrolled || isMobileMenuOpen
           ? 'bg-background/80 backdrop-blur-lg border-b shadow-sm'
           : 'bg-transparent'
       )}
@@ -57,7 +57,7 @@ export function Header() {
             href="/"
             className="text-xl font-bold tracking-tight hover:text-primary transition-colors"
           >
-            JD<span className="text-primary">.</span>
+            AA<span className="text-primary">.</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -119,9 +119,9 @@ export function Header() {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
-              className="md:hidden overflow-hidden"
+              className="md:hidden overflow-hidden border-t"
             >
-              <div className="py-4 space-y-1">
+              <div className="bg-background/95 backdrop-blur-lg py-4 space-y-1">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}

@@ -87,7 +87,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
             className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto"
           >
             {profile?.short_bio ||
-              'I build modern web applications with React, Next.js, and Node.js.'}
+              'Senior Flutter developer focused on clean architecture, scalable systems, and high-performance mobile apps.'}
           </motion.p>
 
           {/* CTAs */}
@@ -104,7 +104,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
               </Link>
             </Button>
             <Button variant="outline" size="xl" asChild>
-              <Link href="/contact">Get in Touch</Link>
+              <Link href="/projects">View My Work</Link>
             </Button>
           </motion.div>
 

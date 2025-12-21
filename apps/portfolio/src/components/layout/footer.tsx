@@ -1,11 +1,15 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
+import { Github, Linkedin, Twitter, Mail, Copy, Check, X } from 'lucide-react';
+import { Input, Button } from '@portfolio/ui';
 
 const socialLinks = [
-  { href: 'https://github.com/johndoe', icon: Github, label: 'GitHub' },
-  { href: 'https://linkedin.com/in/johndoe', icon: Linkedin, label: 'LinkedIn' },
-  { href: 'https://twitter.com/johndoe', icon: Twitter, label: 'Twitter' },
-  { href: 'mailto:john@example.com', icon: Mail, label: 'Email' },
+  { href: 'https://github.com/oiu85', icon: Github, label: 'GitHub' },
+  { href: 'https://www.linkedin.com/in/abdullah-alatrash-398803391', icon: Linkedin, label: 'LinkedIn' },
+  { href: 'https://x.com/85oiu85', icon: Twitter, label: 'Website' },
+  { href: 'mailto:abdullahalatrash.dev@gmail.com', icon: Mail, label: 'Email' },
 ];
 
 const footerLinks = [
@@ -14,8 +18,12 @@ const footerLinks = [
   { href: '/contact', label: 'Contact' },
 ];
 
+const EMAIL = 'abdullahalatrash.dev@gmail.com';
+
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const [showEmailCopy, setShowEmailCopy] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   return (
     <footer className="border-t bg-muted/30">
@@ -24,10 +32,10 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <Link href="/" className="text-xl font-bold tracking-tight">
-              JD<span className="text-primary">.</span>
+              AA<span className="text-primary">.</span>
             </Link>
             <p className="text-sm text-muted-foreground max-w-xs">
-              Full-stack developer passionate about building modern web applications.
+              Senior Mobile Developer specialized in building high-performance Flutter applications.
             </p>
           </div>
 
@@ -50,26 +58,106 @@ export function Footer() {
           {/* Social */}
           <div className="space-y-4">
             <h4 className="font-semibold">Connect</h4>
-            <div className="flex gap-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                  aria-label={social.label}
-                >
-                  <social.icon className="h-5 w-5" />
-                </a>
-              ))}
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-4">
+                {socialLinks.map((social) => {
+                  const isMailto = social.href.startsWith('mailto:');
+                  
+                  if (isMailto) {
+                    return (
+                      <button
+                        key={social.label}
+                        type="button"
+                        onClick={() => setShowEmailCopy(!showEmailCopy)}
+                        className="inline-flex items-center justify-center p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                        aria-label={social.label}
+                        title={social.label}
+                      >
+                        <social.icon className="h-5 w-5" />
+                      </button>
+                    );
+                  }
+                  
+                  return (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+                      aria-label={social.label}
+                      title={social.label}
+                    >
+                      <social.icon className="h-5 w-5" />
+                    </a>
+                  );
+                })}
+              </div>
+              
+              {/* Email Copy Field */}
+              {showEmailCopy && (
+                <div className="flex gap-2 items-center transition-all duration-200">
+                  <div className="flex-1 flex gap-2">
+                    <Input
+                      type="text"
+                      value={EMAIL}
+                      readOnly
+                      className="text-sm cursor-text"
+                      onClick={(e) => (e.target as HTMLInputElement).select()}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(EMAIL);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        } catch (err) {
+                          // Fallback for older browsers
+                          const input = document.createElement('input');
+                          input.value = EMAIL;
+                          document.body.appendChild(input);
+                          input.select();
+                          document.execCommand('copy');
+                          document.body.removeChild(input);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        }
+                      }}
+                      aria-label="Copy email"
+                      title="Copy email"
+                    >
+                      {copied ? (
+                        <Check className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setShowEmailCopy(false);
+                        setCopied(false);
+                      }}
+                      aria-label="Close"
+                      title="Close"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; {currentYear} John Doe. All rights reserved.</p>
+          <p>&copy; {currentYear} Abdullah Alatrash. All rights reserved. @2025</p>
         </div>
       </div>
     </footer>

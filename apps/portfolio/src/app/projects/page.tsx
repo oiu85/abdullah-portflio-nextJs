@@ -7,7 +7,7 @@ import { getProjects } from '@/lib/data';
 
 export const metadata: Metadata = {
   title: 'Projects',
-  description: 'Explore my portfolio of projects showcasing my skills and experience.',
+  description: 'Explore my portfolio of Flutter and mobile development projects showcasing my skills and experience.',
 };
 
 export const revalidate = 3600;
@@ -22,7 +22,7 @@ export default async function ProjectsPage() {
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Projects</h1>
           <p className="text-xl text-muted-foreground">
-            A collection of projects I&apos;ve worked on, from personal experiments to production applications.
+            A collection of Flutter and mobile development projects I&apos;ve worked on, from personal experiments to production applications.
           </p>
         </div>
 

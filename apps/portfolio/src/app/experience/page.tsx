@@ -6,7 +6,7 @@ import { formatDateRange } from '@portfolio/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Experience',
-  description: 'My professional journey and work experience.',
+  description: 'My professional journey as a Senior Mobile Developer specializing in Flutter and clean architecture.',
 };
 
 export const revalidate = 3600;
@@ -21,12 +21,12 @@ export default async function ExperiencePage() {
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Experience</h1>
           <p className="text-xl text-muted-foreground">
-            My professional journey and the companies I&apos;ve had the pleasure to work with.
+            My professional journey as a Senior Mobile Developer specializing in Flutter and clean architecture.
           </p>
         </div>
 
         {/* Timeline */}
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           {experiences.length > 0 ? (
             <div className="relative">
               {/* Timeline line */}
@@ -49,7 +49,7 @@ export default async function ExperiencePage() {
                         index % 2 === 0 ? 'md:pr-12' : 'md:order-2 md:pl-12'
                       }`}
                     >
-                      <Card>
+                      <Card className="w-full">
                         <CardHeader className="pb-4">
                           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                             <Calendar className="h-4 w-4" />
@@ -86,7 +86,7 @@ export default async function ExperiencePage() {
                         <CardContent>
                           <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none mb-4">
                             {exp.description.split('\n\n').map((paragraph, i) => (
-                              <p key={i} className="text-muted-foreground text-sm">
+                              <p key={i} className="text-muted-foreground text-sm leading-relaxed">
                                 {paragraph}
                               </p>
                             ))}

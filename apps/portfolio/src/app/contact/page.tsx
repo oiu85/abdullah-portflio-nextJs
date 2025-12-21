@@ -6,7 +6,7 @@ import { ContactForm } from '@/components/contact-form';
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: 'Get in touch with me for opportunities, collaborations, or just to say hello.',
+  description: 'Get in touch with Abdullah Alatrash for Flutter development opportunities, collaborations, or just to say hello.',
 };
 
 export const revalidate = 3600;

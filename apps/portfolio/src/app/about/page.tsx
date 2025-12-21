@@ -8,7 +8,7 @@ import { formatDateRange } from '@portfolio/lib/utils';
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'Learn more about me, my background, and what drives me as a developer.',
+  description: 'Learn more about Abdullah Alatrash, a Senior Mobile Developer specialized in Flutter and clean architecture.',
 };
 
 export const revalidate = 3600;
@@ -91,7 +91,7 @@ export default async function AboutPage() {
                   {profile?.full_name || 'John Doe'}
                 </h2>
                 <p className="text-lg text-primary mb-4">
-                  {profile?.title || 'Full-Stack Developer'}
+                  {profile?.title || 'Senior Mobile Developer (Flutter)'}
                 </p>
                 <div className="prose prose-neutral dark:prose-invert max-w-none">
                   {profile?.bio?.split('\n\n').map((paragraph, index) => (
@@ -100,7 +100,7 @@ export default async function AboutPage() {
                     </p>
                   )) || (
                     <p className="text-muted-foreground">
-                      A passionate developer with experience building modern web applications.
+                      Senior Mobile Developer specialized in building high-performance Flutter applications using clean and scalable architectures.
                     </p>
                   )}
                 </div>

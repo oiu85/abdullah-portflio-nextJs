@@ -4,7 +4,7 @@ import { SkillsDisplay } from '@/components/skills-display';
 
 export const metadata: Metadata = {
   title: 'Skills',
-  description: 'Explore my technical skills and proficiency across various technologies.',
+  description: 'Explore my technical skills and proficiency in Flutter, Dart, Clean Architecture, and mobile development technologies.',
 };
 
 export const revalidate = 3600;
@@ -34,7 +34,7 @@ export default async function SkillsPage() {
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Skills & Technologies</h1>
           <p className="text-xl text-muted-foreground">
-            Technologies and tools I use to bring ideas to life.
+            Technologies and tools I use to build high-performance Flutter applications.
           </p>
         </div>
 

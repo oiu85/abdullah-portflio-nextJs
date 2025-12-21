@@ -33,7 +33,7 @@ export default async function HomePage() {
             Let&apos;s Work Together
           </h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            I&apos;m always open to new opportunities and interesting projects. 
+            I&apos;m always open to new Flutter development opportunities and interesting mobile projects. 
             Whether you have a question or just want to say hi, feel free to reach out!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
