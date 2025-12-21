@@ -1,0 +1,27 @@
+{
+  "name": "portfolio-system",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:portfolio": "turbo dev --filter=portfolio",
+    "dev:dashboard": "turbo dev --filter=dashboard",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "clean": "turbo clean && rimraf node_modules"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+    "turbo": "^1.11.2",
+    "typescript": "^5.3.2"
+  },
+  "packageManager": "pnpm@8.11.0",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
