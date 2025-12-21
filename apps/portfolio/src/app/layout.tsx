@@ -25,6 +25,11 @@ export const metadata: Metadata = {
   keywords: ['developer', 'portfolio', 'flutter', 'mobile', 'dart', 'clean architecture'],
   authors: [{ name: 'Abdullah Alatrash' }],
   creator: 'Abdullah Alatrash',
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
