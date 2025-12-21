@@ -86,7 +86,7 @@ export function ExperienceForm({ experience }: ExperienceFormProps) {
           logoUrl = await uploadImage(logoFile);
         } else if (logoPreview === null && experience.company_logo) {
           // If logo was removed, set to null
-          logoUrl = null;
+          logoUrl = null as unknown as string;
         }
 
         const { error } = await supabase.from('experience').update({

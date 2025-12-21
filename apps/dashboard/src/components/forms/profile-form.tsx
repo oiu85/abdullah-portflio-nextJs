@@ -112,7 +112,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           avatarUrl = await uploadFile(avatarFile);
         } else if (avatarPreview === null && profile.avatar_url) {
           // If avatar was removed, set to null
-          avatarUrl = null;
+          avatarUrl = null as unknown as string;
         }
 
         // Upload resume if selected
@@ -121,7 +121,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           newResumeUrl = await uploadFile(resumeFile);
         } else if (resumeUrl === null && profile.resume_url) {
           // If resume was removed, set to null
-          newResumeUrl = null;
+          newResumeUrl = null as unknown as string;
         }
 
         const { error } = await supabase.from('profile').update({
