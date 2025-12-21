@@ -43,22 +43,20 @@ export function HeroSection({ profile }: HeroSectionProps) {
           )}
 
           {/* Avatar */}
-          {profile?.avatar_url && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="mb-8"
-            >
-              <Image
-                src={profile.avatar_url}
-                alt={profile.full_name}
-                width={120}
-                height={120}
-                className="rounded-full mx-auto border-4 border-background shadow-xl"
-              />
-            </motion.div>
-          )}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mb-8"
+          >
+            <Image
+              src={profile?.avatar_url || '/images/my_image.jpg'}
+              alt={profile?.full_name || 'Profile Picture'}
+              width={120}
+              height={120}
+              className="rounded-full mx-auto border-4 border-background shadow-xl object-cover"
+            />
+          </motion.div>
 
           {/* Name & Title */}
           <motion.h1
