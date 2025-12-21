@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Upload, X } from 'lucide-react';
 import { Button, Input, Textarea, Label, Card, CardContent, Switch } from '@portfolio/ui';
 import { createClient } from '@/lib/supabase/client';
 import type { Experience } from '@portfolio/types';
@@ -16,6 +16,9 @@ export function ExperienceForm({ experience }: ExperienceFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(experience?.company_logo || null);
 
   const [formData, setFormData] = useState({
     company: experience?.company || '',
@@ -31,6 +34,38 @@ export function ExperienceForm({ experience }: ExperienceFormProps) {
     display_order: experience?.display_order || 0,
   });
 
+  const uploadImage = async (file: File): Promise<string> => {
+    const supabase = createClient();
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `uploads/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('media')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage
+      .from('media')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
+
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setLogoFile(file);
+      setLogoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const removeLogo = () => {
+    setLogoFile(null);
+    setLogoPreview(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -45,10 +80,31 @@ export function ExperienceForm({ experience }: ExperienceFormProps) {
       };
 
       if (experience) {
-        const { error } = await supabase.from('experience').update(data).eq('id', experience.id);
+        // Upload logo if selected
+        let logoUrl = experience.company_logo;
+        if (logoFile) {
+          logoUrl = await uploadImage(logoFile);
+        } else if (logoPreview === null && experience.company_logo) {
+          // If logo was removed, set to null
+          logoUrl = null;
+        }
+
+        const { error } = await supabase.from('experience').update({
+          ...data,
+          company_logo: logoUrl
+        }).eq('id', experience.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('experience').insert([data]);
+        // Upload logo if selected
+        let logoUrl = null;
+        if (logoFile) {
+          logoUrl = await uploadImage(logoFile);
+        }
+
+        const { error } = await supabase.from('experience').insert([{
+          ...data,
+          company_logo: logoUrl
+        }]);
         if (error) throw error;
       }
 
@@ -72,6 +128,44 @@ export function ExperienceForm({ experience }: ExperienceFormProps) {
 
       <Card>
         <CardContent className="p-6 space-y-6">
+          {/* Company Logo Upload */}
+          <div className="space-y-2">
+            <Label>Company Logo</Label>
+            <input
+              type="file"
+              ref={logoInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleLogoChange}
+            />
+            <div className="flex flex-col gap-2">
+              {logoPreview && (
+                <div className="relative w-24 h-24 rounded-lg overflow-hidden border">
+                  <img
+                    src={logoPreview}
+                    alt="Logo preview"
+                    className="w-full h-full object-contain bg-white p-2"
+                  />
+                  <button
+                    type="button"
+                    onClick={removeLogo}
+                    className="absolute -top-2 -right-2 bg-destructive text-white rounded-full p-1"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => logoInputRef.current?.click()}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                {logoPreview ? 'Change Logo' : 'Upload Logo'}
+              </Button>
+            </div>
+          </div>
+
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="company">Company *</Label>

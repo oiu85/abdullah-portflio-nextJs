@@ -1,9 +1,9 @@
-'use client';
+\'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Upload, X } from 'lucide-react';
 import { Button, Input, Textarea, Label, Card, CardContent, Switch } from '@portfolio/ui';
 import { createClient } from '@/lib/supabase/client';
 import type { Project } from '@portfolio/types';
@@ -28,7 +28,14 @@ export function ProjectForm({ project }: ProjectFormProps) {
     is_featured: project?.is_featured || false,
     is_published: project?.is_published || false,
     display_order: project?.display_order || 0,
+    featured_image: project?.featured_image || '',
   });
+
+  const [galleryImages, setGalleryImages] = useState<string[]>(project?.images || []);
+  const [featuredImageFile, setFeaturedImageFile] = useState<File | null>(null);
+  const [galleryImageFiles, setGalleryImageFiles] = useState<File[]>([]);
+  const featuredImageInputRef = useRef<HTMLInputElement>(null);
+  const galleryImageInputRef = useRef<HTMLInputElement>(null);
 
   const generateSlug = (title: string) => {
     return title
@@ -48,6 +55,47 @@ export function ProjectForm({ project }: ProjectFormProps) {
     }));
   };
 
+  const uploadImage = async (file: File): Promise<string> => {
+    const supabase = createClient();
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `uploads/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('media')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage
+      .from('media')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
+
+  const handleFeaturedImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFeaturedImageFile(file);
+    }
+  };
+
+  const handleGalleryImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      setGalleryImageFiles(prev => [...prev, ...files]);
+    }
+  };
+
+  const removeGalleryImageFile = (index: number) => {
+    setGalleryImageFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const removeGalleryImageUrl = (index: number) => {
+    setGalleryImages(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -55,8 +103,24 @@ export function ProjectForm({ project }: ProjectFormProps) {
 
     try {
       const supabase = createClient();
+      
+      // Upload featured image if selected
+      let featuredImageUrl = formData.featured_image;
+      if (featuredImageFile) {
+        featuredImageUrl = await uploadImage(featuredImageFile);
+      }
+
+      // Upload new gallery images
+      const newGalleryImageUrls = [];
+      for (const file of galleryImageFiles) {
+        const url = await uploadImage(file);
+        newGalleryImageUrls.push(url);
+      }
+
       const data = {
         ...formData,
+        featured_image: featuredImageUrl,
+        images: [...galleryImages, ...newGalleryImageUrls],
         technologies: formData.technologies.split(',').map((t) => t.trim()).filter(Boolean),
       };
 
@@ -113,6 +177,106 @@ export function ProjectForm({ project }: ProjectFormProps) {
               placeholder="project-slug"
               required
             />
+          </div>
+
+          {/* Featured Image */}
+          <div className="space-y-2">
+            <Label>Featured Image</Label>
+            <input
+              type="file"
+              ref={featuredImageInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleFeaturedImageChange}
+            />
+            <div className="flex flex-col gap-2">
+              {(featuredImageFile || formData.featured_image) && (
+                <div className="relative w-32 h-32 rounded-lg overflow-hidden border">
+                  <img
+                    src={featuredImageFile ? URL.createObjectURL(featuredImageFile) : formData.featured_image}
+                    alt="Featured"
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFeaturedImageFile(null);
+                      setFormData(prev => ({ ...prev, featured_image: '' }));
+                    }}
+                    className="absolute -top-2 -right-2 bg-destructive text-white rounded-full p-1"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => featuredImageInputRef.current?.click()}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                {featuredImageFile || formData.featured_image ? 'Change Image' : 'Upload Image'}
+              </Button>
+            </div>
+          </div>
+
+          {/* Gallery Images */}
+          <div className="space-y-2">
+            <Label>Gallery Images</Label>
+            <input
+              type="file"
+              ref={galleryImageInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleGalleryImageChange}
+              multiple
+            />
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-wrap gap-2">
+                {/* Existing gallery images */}
+                {galleryImages.map((img, index) => (
+                  <div key={`existing-${index}`} className="relative w-24 h-24 rounded-lg overflow-hidden border">
+                    <img
+                      src={img}
+                      alt={`Gallery ${index}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeGalleryImageUrl(index)}
+                      className="absolute -top-2 -right-2 bg-destructive text-white rounded-full p-1"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                {/* New gallery image previews */}
+                {galleryImageFiles.map((file, index) => (
+                  <div key={`new-${index}`} className="relative w-24 h-24 rounded-lg overflow-hidden border">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={`New ${index}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeGalleryImageFile(index)}
+                      className="absolute -top-2 -right-2 bg-destructive text-white rounded-full p-1"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => galleryImageInputRef.current?.click()}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Add Images
+              </Button>
+            </div>
           </div>
 
           {/* Short Description */}

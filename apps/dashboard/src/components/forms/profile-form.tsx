@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input, Textarea, Label, Card, CardContent, Switch } from '@portfolio/ui';
 import { createClient } from '@/lib/supabase/client';
 import type { Profile } from '@portfolio/types';
+import { Upload, X } from 'lucide-react';
 
 interface ProfileFormProps {
   profile?: Profile | null;
@@ -15,6 +16,12 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const resumeInputRef = useRef<HTMLInputElement>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(profile?.avatar_url || null);
+  const [resumeUrl, setResumeUrl] = useState<string | null>(profile?.resume_url || null);
 
   const [formData, setFormData] = useState({
     full_name: profile?.full_name || '',
@@ -29,6 +36,50 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     linkedin: profile?.social_links?.linkedin || '',
     twitter: profile?.social_links?.twitter || '',
   });
+
+  const uploadFile = async (file: File): Promise<string> => {
+    const supabase = createClient();
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `uploads/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('media')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage
+      .from('media')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setResumeFile(file);
+    }
+  };
+
+  const removeAvatar = () => {
+    setAvatarFile(null);
+    setAvatarPreview(null);
+  };
+
+  const removeResume = () => {
+    setResumeFile(null);
+    setResumeUrl(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,10 +106,48 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       };
 
       if (profile) {
-        const { error } = await supabase.from('profile').update(data).eq('id', profile.id);
+        // Upload avatar if selected
+        let avatarUrl = profile.avatar_url;
+        if (avatarFile) {
+          avatarUrl = await uploadFile(avatarFile);
+        } else if (avatarPreview === null && profile.avatar_url) {
+          // If avatar was removed, set to null
+          avatarUrl = null;
+        }
+
+        // Upload resume if selected
+        let newResumeUrl = profile.resume_url;
+        if (resumeFile) {
+          newResumeUrl = await uploadFile(resumeFile);
+        } else if (resumeUrl === null && profile.resume_url) {
+          // If resume was removed, set to null
+          newResumeUrl = null;
+        }
+
+        const { error } = await supabase.from('profile').update({
+          ...data,
+          avatar_url: avatarUrl,
+          resume_url: newResumeUrl
+        }).eq('id', profile.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('profile').insert([data]);
+        // Upload avatar if selected
+        let avatarUrl = null;
+        if (avatarFile) {
+          avatarUrl = await uploadFile(avatarFile);
+        }
+
+        // Upload resume if selected
+        let resumeUrl = null;
+        if (resumeFile) {
+          resumeUrl = await uploadFile(resumeFile);
+        }
+
+        const { error } = await supabase.from('profile').insert([{
+          ...data,
+          avatar_url: avatarUrl,
+          resume_url: resumeUrl
+        }]);
         if (error) throw error;
       }
 
@@ -75,6 +164,90 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6">
       <Card>
         <CardContent className="p-6 space-y-6">
+          {/* Avatar Upload */}
+          <div className="space-y-2">
+            <Label>Profile Picture</Label>
+            <input
+              type="file"
+              ref={avatarInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleAvatarChange}
+            />
+            <div className="flex flex-col gap-2">
+              {avatarPreview && (
+                <div className="relative w-32 h-32 rounded-full overflow-hidden border">
+                  <img
+                    src={avatarPreview}
+                    alt="Avatar preview"
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={removeAvatar}
+                    className="absolute -top-2 -right-2 bg-destructive text-white rounded-full p-1"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => avatarInputRef.current?.click()}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                {avatarPreview ? 'Change Picture' : 'Upload Picture'}
+              </Button>
+            </div>
+          </div>
+
+          {/* Resume Upload */}
+          <div className="space-y-2">
+            <Label>Resume</Label>
+            <input
+              type="file"
+              ref={resumeInputRef}
+              className="hidden"
+              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              onChange={handleResumeChange}
+            />
+            <div className="flex flex-col gap-2">
+              {resumeUrl && (
+                <div className="flex items-center gap-2">
+                  <a 
+                    href={resumeUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    View Current Resume
+                  </a>
+                  <button
+                    type="button"
+                    onClick={removeResume}
+                    className="text-destructive hover:underline"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+              {resumeFile && (
+                <div className="text-sm text-muted-foreground">
+                  Selected: {resumeFile.name}
+                </div>
+              )}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => resumeInputRef.current?.click()}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                {resumeUrl || resumeFile ? 'Change Resume' : 'Upload Resume'}
+              </Button>
+            </div>
+          </div>
+
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="full_name">Full Name *</Label>
