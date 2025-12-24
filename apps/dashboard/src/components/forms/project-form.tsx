@@ -7,6 +7,7 @@ import { ArrowLeft, Upload, X } from 'lucide-react';
 import { Button, Input, Textarea, Label, Card, CardContent, Switch } from '@portfolio/ui';
 import { createClient } from '@/lib/supabase/client';
 import type { Project } from '@portfolio/types';
+import { RichTextEditor } from '@/components/rich-text-editor';
 
 interface ProjectFormProps {
   project?: Project;
@@ -100,6 +101,13 @@ export function ProjectForm({ project }: ProjectFormProps) {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+
+    // Validate description (should not be empty)
+    if (!formData.description || formData.description.trim() === '' || formData.description === '<p></p>') {
+      setError('Description is required');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const supabase = createClient();
@@ -295,13 +303,10 @@ export function ProjectForm({ project }: ProjectFormProps) {
           {/* Description */}
           <div className="space-y-2">
             <Label htmlFor="description">Full Description *</Label>
-            <Textarea
-              id="description"
+            <RichTextEditor
               value={formData.description}
-              onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+              onChange={(value) => setFormData((prev) => ({ ...prev, description: value }))}
               placeholder="Detailed project description"
-              className="min-h-[200px]"
-              required
             />
           </div>
 
