@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, Download, Github, Linkedin, Twitter } from 'lucide-react';
+import { ArrowRight, Download, Github, Linkedin, Twitter, Mail } from 'lucide-react';
 import { Button, Badge } from '@portfolio/ui';
 import type { Profile } from '@portfolio/types';
 
@@ -104,7 +104,10 @@ export function HeroSection({ profile }: HeroSectionProps) {
               </Link>
             </Button>
             <Button variant="outline" size="xl" asChild>
-              <Link href="/projects">View My Work</Link>
+              <Link href="/contact">
+                Contact Me
+                <Mail className="ml-2 h-5 w-5" />
+              </Link>
             </Button>
           </motion.div>
 
