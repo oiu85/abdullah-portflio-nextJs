@@ -62,77 +62,77 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           galleryImages={project.images}
           projectTitle={project.title}
         >
-          <div className="max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="mb-8">
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                {project.is_featured && <Badge>Featured</Badge>}
-                {project.start_date && (
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    {formatDate(project.start_date, { year: 'numeric', month: 'long' })}
-                    {project.end_date &&
-                      ` - ${formatDate(project.end_date, { year: 'numeric', month: 'long' })}`}
-                  </div>
-                )}
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">{project.title}</h1>
-              <p className="text-xl text-muted-foreground">{project.short_description}</p>
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              {project.is_featured && <Badge>Featured</Badge>}
+              {project.start_date && (
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <Calendar className="h-4 w-4" />
+                  {formatDate(project.start_date, { year: 'numeric', month: 'long' })}
+                  {project.end_date &&
+                    ` - ${formatDate(project.end_date, { year: 'numeric', month: 'long' })}`}
+                </div>
+              )}
             </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{project.title}</h1>
+            <p className="text-xl text-muted-foreground">{project.short_description}</p>
+          </div>
 
-            {/* Featured Image */}
+          {/* Featured Image */}
             <ProjectImages
               featuredImage={project.featured_image}
               galleryImages={project.images}
               projectTitle={project.title}
             />
 
-            {/* Actions */}
-            <div className="flex flex-wrap gap-4 mb-8">
-              {project.live_url && (
-                <Button asChild>
-                  <a href={project.live_url} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="mr-2 h-4 w-4" />
-                    View Live Site
-                  </a>
-                </Button>
-              )}
-              {project.github_url && (
-                <Button variant="outline" asChild>
-                  <a href={project.github_url} target="_blank" rel="noopener noreferrer">
-                    <Github className="mr-2 h-4 w-4" />
-                    View Source
-                  </a>
-                </Button>
-              )}
-            </div>
+          {/* Actions */}
+          <div className="flex flex-wrap gap-4 mb-8">
+            {project.live_url && (
+              <Button asChild>
+                <a href={project.live_url} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  View Live Site
+                </a>
+              </Button>
+            )}
+            {project.github_url && (
+              <Button variant="outline" asChild>
+                <a href={project.github_url} target="_blank" rel="noopener noreferrer">
+                  <Github className="mr-2 h-4 w-4" />
+                  View Source
+                </a>
+              </Button>
+            )}
+          </div>
 
-            {/* Technologies */}
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold mb-3">Technologies Used</h2>
-              <div className="flex flex-wrap gap-2">
-                {project.technologies.map((tech) => (
-                  <Badge key={tech} variant="secondary" className="text-sm">
-                    {tech}
-                  </Badge>
-                ))}
-              </div>
+          {/* Technologies */}
+          <div className="mb-8">
+            <h2 className="text-lg font-semibold mb-3">Technologies Used</h2>
+            <div className="flex flex-wrap gap-2">
+              {project.technologies.map((tech) => (
+                <Badge key={tech} variant="secondary" className="text-sm">
+                  {tech}
+                </Badge>
+              ))}
             </div>
+          </div>
 
-            {/* Description */}
-            <div className="prose prose-neutral dark:prose-invert max-w-none">
-              <h2>About This Project</h2>
+          {/* Description */}
+          <div className="prose prose-neutral dark:prose-invert max-w-none">
+            <h2>About This Project</h2>
               <SafeHtml content={project.description} />
-            </div>
+          </div>
 
-            {/* Gallery */}
+          {/* Gallery */}
             <ProjectImages
               featuredImage={project.featured_image}
               galleryImages={project.images}
               projectTitle={project.title}
               showGallery={true}
-            />
-          </div>
+                    />
+                  </div>
         </ProjectImagesProvider>
       </div>
     </div>

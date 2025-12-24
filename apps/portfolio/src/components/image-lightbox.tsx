@@ -6,6 +6,7 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
 } from '@portfolio/ui';
 import { Button } from '@portfolio/ui';
 import { cn } from '@portfolio/ui';
@@ -71,6 +72,9 @@ export function ImageLightbox({
         className="max-w-7xl w-full h-full max-h-[95vh] p-0 border-0 bg-transparent [&>button]:hidden [&>div]:bg-black/95"
         onInteractOutside={onClose}
       >
+        <DialogTitle className="sr-only">
+          Image Lightbox - {alt} {currentIndex + 1} of {images.length}
+        </DialogTitle>
         <div className="relative w-full h-full flex items-center justify-center">
           {/* Close Button */}
           <Button

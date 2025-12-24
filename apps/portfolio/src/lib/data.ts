@@ -46,17 +46,44 @@ export async function getProjects(options?: {
 // Get single project by slug
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
   const supabase = await createClient();
+  
+  // First, try to find the project without the is_published filter to debug
+  const { data: allData, error: allError } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (allError) {
+    console.error('Error fetching project (all):', allError);
+  }
+
+  // If project exists but is not published, log it
+  if (allData && !allData.is_published) {
+    console.warn(`Project with slug "${slug}" exists but is not published. is_published: ${allData.is_published}`);
+  }
+
+  // Now try with the published filter
   const { data, error } = await supabase
     .from('projects')
     .select('*')
     .eq('slug', slug)
     .eq('is_published', true)
-    .single();
+    .maybeSingle();
 
   if (error) {
-    console.error('Error fetching project:', error);
+    // PGRST116 means no rows found, which is expected if project doesn't exist or isn't published
+    if (error.code !== 'PGRST116') {
+      console.error('Error fetching project:', error);
+    }
     return null;
   }
+  
+  if (!data) {
+    console.warn(`No published project found with slug: "${slug}"`);
+    return null;
+  }
+  
   return data;
 }
 

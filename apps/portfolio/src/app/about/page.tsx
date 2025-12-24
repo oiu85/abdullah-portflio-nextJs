@@ -41,6 +41,7 @@ export default async function AboutPage() {
                       alt={profile.full_name}
                       fill
                       className="object-cover"
+                      sizes="192px"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-muted-foreground">
