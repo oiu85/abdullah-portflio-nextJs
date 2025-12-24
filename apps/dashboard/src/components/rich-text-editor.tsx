@@ -67,15 +67,15 @@ const FontSize = Extension.create({
     return {
       setFontSize:
         (fontSize: string) =>
-        ({ chain }) => {
+        ({ chain }: any) => {
           return chain().setMark('textStyle', { fontSize }).run();
         },
       unsetFontSize:
         () =>
-        ({ chain }) => {
+        ({ chain }: any) => {
           return chain().setMark('textStyle', { fontSize: null }).removeEmptyTextStyle().run();
         },
-    };
+    } as any;
   },
 });
 
@@ -177,9 +177,9 @@ export function RichTextEditor({
 
   const setFontSize = (size: string) => {
     if (size === 'default' || size === '') {
-      editor.chain().focus().unsetFontSize().run();
+      (editor.chain().focus() as any).unsetFontSize().run();
     } else {
-      editor.chain().focus().setFontSize(size).run();
+      (editor.chain().focus() as any).setFontSize(size).run();
     }
   };
 
