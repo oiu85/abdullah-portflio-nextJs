@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@portfolio/ui';
 import type { Skill } from '@portfolio/types';
+import { SkillIcon } from './skill-icon';
 
 interface SkillsDisplayProps {
   title: string;
@@ -29,9 +30,23 @@ export function SkillsDisplay({ title, skills }: SkillsDisplayProps) {
           >
             <Card className="hover:shadow-md transition-shadow">
               <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">{skill.name}</span>
-                  <span className="text-sm text-muted-foreground">{skill.proficiency}%</span>
+                <div className="flex items-center gap-3 mb-3">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                  >
+                    <SkillIcon icon={skill.icon} name={skill.name} size="md" />
+                  </motion.div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium truncate">{skill.name}</span>
+                      <span className="text-sm text-muted-foreground ml-2 flex-shrink-0">
+                        {skill.proficiency}%
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <motion.div

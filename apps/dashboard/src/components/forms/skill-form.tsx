@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Upload, X } from 'lucide-react';
 import { Button, Input, Label, Card, CardContent, Switch, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@portfolio/ui';
 import { createClient } from '@/lib/supabase/client';
 import type { Skill, SkillCategory } from '@portfolio/types';
@@ -27,6 +27,8 @@ export function SkillForm({ skill }: SkillFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [iconFile, setIconFile] = useState<File | null>(null);
+  const iconInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState<{
     name: string;
@@ -44,6 +46,51 @@ export function SkillForm({ skill }: SkillFormProps) {
     display_order: skill?.display_order || 0,
   });
 
+  const uploadImage = async (file: File): Promise<string> => {
+    const supabase = createClient();
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `icons/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('media')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage
+      .from('media')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
+
+  const handleIconFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setIconFile(file);
+      // Clear URL input when file is selected
+      setFormData((prev) => ({ ...prev, icon: '' }));
+    }
+  };
+
+  const handleIconUrlChange = (url: string) => {
+    setFormData((prev) => ({ ...prev, icon: url }));
+    // Clear file when URL is entered
+    setIconFile(null);
+    if (iconInputRef.current) {
+      iconInputRef.current.value = '';
+    }
+  };
+
+  const clearIcon = () => {
+    setIconFile(null);
+    setFormData((prev) => ({ ...prev, icon: '' }));
+    if (iconInputRef.current) {
+      iconInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -52,11 +99,22 @@ export function SkillForm({ skill }: SkillFormProps) {
     try {
       const supabase = createClient();
 
+      // Upload icon file if selected
+      let iconUrl = formData.icon;
+      if (iconFile) {
+        iconUrl = await uploadImage(iconFile);
+      }
+
+      const data = {
+        ...formData,
+        icon: iconUrl || null,
+      };
+
       if (skill) {
-        const { error } = await supabase.from('skills').update(formData).eq('id', skill.id);
+        const { error } = await supabase.from('skills').update(data).eq('id', skill.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('skills').insert([formData]);
+        const { error } = await supabase.from('skills').insert([data]);
         if (error) throw error;
       }
 
@@ -110,6 +168,79 @@ export function SkillForm({ skill }: SkillFormProps) {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Icon */}
+          <div className="space-y-2">
+            <Label htmlFor="icon">Icon</Label>
+            <div className="space-y-3">
+              {/* Icon URL Input */}
+              <div className="space-y-2">
+                <Input
+                  id="icon"
+                  type="url"
+                  value={formData.icon}
+                  onChange={(e) => handleIconUrlChange(e.target.value)}
+                  placeholder="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/react.svg"
+                  disabled={!!iconFile}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Enter an icon URL (e.g., from Simple Icons, DevIcons, etc.)
+                </p>
+              </div>
+
+              {/* Divider */}
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">Or</span>
+                </div>
+              </div>
+
+              {/* Icon File Upload */}
+              <div className="space-y-2">
+                <input
+                  type="file"
+                  ref={iconInputRef}
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleIconFileChange}
+                  disabled={!!formData.icon}
+                />
+                <div className="flex flex-col gap-2">
+                  {(iconFile || formData.icon) && (
+                    <div className="relative w-24 h-24 rounded-lg overflow-hidden border bg-muted flex items-center justify-center">
+                      <img
+                        src={iconFile ? URL.createObjectURL(iconFile) : formData.icon}
+                        alt="Skill icon"
+                        className="w-full h-full object-contain p-2"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={clearIcon}
+                        className="absolute -top-2 -right-2 bg-destructive text-white rounded-full p-1 hover:bg-destructive/90 transition-colors"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  )}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => iconInputRef.current?.click()}
+                    disabled={!!formData.icon}
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    {iconFile || formData.icon ? 'Change Icon' : 'Upload Icon'}
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Proficiency */}

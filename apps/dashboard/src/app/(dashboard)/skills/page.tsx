@@ -3,6 +3,7 @@ import { Plus, Edit, Eye, EyeOff } from 'lucide-react';
 import { Button, Card, CardContent, Badge } from '@portfolio/ui';
 import { createClient } from '@/lib/supabase/server';
 import { DeleteButton } from '@/components/delete-button';
+import { SkillIcon } from '@/components/skill-icon';
 import type { Skill } from '@portfolio/types';
 
 const categoryLabels: Record<string, string> = {
@@ -63,7 +64,8 @@ export default async function SkillsPage() {
                   <Card key={skill.id}>
                     <CardContent className="flex items-center gap-4 p-4">
                       <div className="flex-1">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
+                          <SkillIcon icon={skill.icon} name={skill.name} size="md" />
                           <span className="font-medium">{skill.name}</span>
                           <span className="text-sm text-muted-foreground">
                             {skill.proficiency}%

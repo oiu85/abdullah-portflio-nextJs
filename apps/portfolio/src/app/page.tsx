@@ -6,7 +6,7 @@ import { HeroSection } from '@/components/sections/hero-section';
 import { FeaturedProjects } from '@/components/sections/featured-projects';
 import { SkillsPreview } from '@/components/sections/skills-preview';
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 0; // Revalidate on every request for now to see icons
 
 export default async function HomePage() {
   const [profile, projects, skills] = await Promise.all([

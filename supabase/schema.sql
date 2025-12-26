@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS skills (
         'tools', 'design', 'soft_skills', 'other'
     )),
     proficiency INTEGER NOT NULL CHECK (proficiency >= 1 AND proficiency <= 100),
-    icon VARCHAR(100),
+    icon TEXT,
     is_published BOOLEAN DEFAULT true,
     display_order INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

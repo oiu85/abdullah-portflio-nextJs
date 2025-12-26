@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: 'Explore my technical skills and proficiency in Flutter, Dart, Clean Architecture, and mobile development technologies.',
 };
 
-export const revalidate = 3600;
+export const revalidate = 0; // Revalidate on every request for now to see icons
 
 const categoryLabels: Record<string, string> = {
   frontend: 'Frontend Development',

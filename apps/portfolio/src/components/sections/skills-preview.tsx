@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Button, Badge } from '@portfolio/ui';
 import type { Skill } from '@portfolio/types';
+import { SkillIcon } from '../skill-icon';
 
 interface SkillsPreviewProps {
   skills: Skill[];
@@ -64,10 +65,11 @@ export function SkillsPreview({ skills }: SkillsPreviewProps) {
               transition={{ duration: 0.3, delay: index * 0.05 }}
             >
               <span
-                className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium transition-transform hover:scale-105 ${
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-transform hover:scale-105 ${
                   categoryColors[skill.category] || categoryColors.other
                 }`}
               >
+                <SkillIcon icon={skill.icon} name={skill.name} size="sm" transparent />
                 {skill.name}
               </span>
             </motion.div>
