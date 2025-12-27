@@ -17,10 +17,111 @@ export function HeroSection({ profile }: HeroSectionProps) {
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
       
-      {/* Animated background shapes */}
+      {/* Animated infinity moving background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl" />
+        {/* Large floating shapes */}
+        <motion.div
+          className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-2xl"
+          animate={{
+            x: [-100, 100, -100],
+            y: [100, -100, 100],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        <motion.div
+          className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-2xl"
+          animate={{
+            x: [100, -100, 100],
+            y: [-100, 100, -100],
+            scale: [1, 1.05, 1]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        
+        {/* Medium floating elements */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-xl"
+          animate={{
+            x: [50, -50, 50],
+            y: [-50, 50, -50],
+            rotate: [0, 180, 360]
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        
+        {/* Small floating particles */}
+        <motion.div
+          className="absolute top-1/3 right-1/3 w-32 h-32 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-full blur-lg"
+          animate={{
+            x: [30, -30, 30, -10],
+            y: [-30, 30, -30, 10],
+            scale: [0.8, 1.2, 0.8]
+          }}
+          transition={{
+            duration: 13,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        {/* Additional floating elements for infinity pattern */}
+        <motion.div
+          className="absolute bottom-1/4 left-1/3 w-48 h-48 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-full blur-xl"
+          animate={{
+            x: [-40, 40, -40, 20],
+            y: [40, -40, 40, -20],
+            opacity: [0.3, 0.7, 0.3]
+          }}
+          transition={{
+            duration: 16,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        
+        {/* Subtle floating particles for depth */}
+        <motion.div
+          className="absolute top-1/5 right-1/4 w-20 h-20 bg-primary/5 rounded-full blur-md"
+          animate={{
+            x: [20, -20, 20],
+            y: [-20, 20, -20],
+            opacity: [0.4, 0.2, 0.4]
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        {/* Infinity path particles */}
+        <motion.div
+          className="absolute top-2/3 left-1/5 w-16 h-16 bg-secondary/5 rounded-full blur-sm"
+          animate={{
+            pathLength: [0, 1],
+            x: [0, 150, 75, 0],
+            y: [0, 0, 75, 75],
+            opacity: [0.2, 0.6, 0.2]
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
