@@ -47,13 +47,13 @@ export function HeroSection({ profile }: HeroSectionProps) {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-8"
+            className="mb-10"
           >
             <Image
               src={profile?.avatar_url || '/images/my_image.jpg'}
               alt={profile?.full_name || 'Profile Picture'}
-              width={120}
-              height={120}
+              width={200}
+              height={200}
               className="rounded-full mx-auto border-4 border-background shadow-xl object-cover"
             />
           </motion.div>
