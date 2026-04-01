@@ -103,7 +103,7 @@ function SingleProjectHeroImage({
   );
 }
 
-const AUTO_SLIDE_MS = 5_000;
+const AUTO_SLIDE_MS = 2_000;
 
 function ProjectImageSlider({
   allImages,
@@ -118,21 +118,26 @@ function ProjectImageSlider({
     () =>
       Autoplay({
         delay: AUTO_SLIDE_MS,
+        playOnInit: true,
+        // stopOnFocusIn + stopOnInteraction together can stop autoplay with no restart (slideFocusStart)
+        stopOnFocusIn: false,
+        // false: after drag/swipe, pointerUp restarts the timer (see embla-carousel-autoplay)
+        stopOnInteraction: false,
         stopOnMouseEnter: true,
-        stopOnInteraction: true,
-        stopOnFocusIn: true,
       }),
     []
   );
 
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    {
+  const emblaOptions = useMemo(
+    () => ({
       loop: allImages.length > 1,
-      align: 'start',
+      align: 'start' as const,
       dragFree: false,
-    },
-    [autoplayPlugin]
+    }),
+    [allImages.length]
   );
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions, [autoplayPlugin]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canPrev, setCanPrev] = useState(false);
@@ -155,11 +160,6 @@ function ProjectImageSlider({
       emblaApi.off('reInit', onSelect);
     };
   }, [emblaApi, onSelect]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    emblaApi.reInit({ loop: allImages.length > 1 });
-  }, [emblaApi, allImages.length]);
 
   useEffect(() => {
     if (!emblaApi) return;
