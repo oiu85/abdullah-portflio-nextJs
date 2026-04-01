@@ -2,13 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Menu, X, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@portfolio/ui';
 import { cn } from '@portfolio/ui';
 import { useHomeScrollSpy, type HomeSectionId } from '@/hooks/use-home-scroll-spy';
+import { toggleThemeWithTransition } from '@/lib/theme-transition';
+import { motionEase } from '@/lib/motion';
 
 type NavItem = {
   href: string;
@@ -30,8 +32,9 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   const activeSection = useHomeScrollSpy(pathname === '/');
   const effectiveSection =
@@ -52,6 +55,12 @@ export function Header() {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
+
+  const handleThemeToggle = useCallback(() => {
+    if (!resolvedTheme) return;
+    const next = resolvedTheme === 'dark' ? 'light' : 'dark';
+    toggleThemeWithTransition(setTheme, next);
+  }, [resolvedTheme, setTheme]);
 
   const isNavActive = (item: NavItem) => {
     if (item.homeSection && pathname === '/') {
@@ -113,14 +122,26 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onClick={handleThemeToggle}
                 aria-label="Toggle theme"
+                className="transition-colors duration-300"
               >
-                {theme === 'dark' ? (
-                  <Sun className="h-5 w-5" />
-                ) : (
-                  <Moon className="h-5 w-5" />
-                )}
+                <motion.span
+                  key={resolvedTheme}
+                  initial={reduceMotion ? false : { scale: 0.88, opacity: 0.75 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{
+                    duration: 0.28,
+                    ease: motionEase.out,
+                  }}
+                  className="inline-flex"
+                >
+                  {resolvedTheme === 'dark' ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )}
+                </motion.span>
               </Button>
             )}
 

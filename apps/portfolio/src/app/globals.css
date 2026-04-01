@@ -117,12 +117,34 @@
     background-image: var(--gradient-mesh);
     background-attachment: fixed;
     font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    transition:
+      background-color 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    transition: color 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body {
+    transition: none !important;
+  }
+}
+
+/* Theme toggle: View Transitions API (Chrome/Edge/Safari 18+) — soft cross-fade */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Custom scrollbar */

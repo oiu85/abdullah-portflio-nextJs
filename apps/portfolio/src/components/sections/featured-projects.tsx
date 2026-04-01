@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay';
 import { motion } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button, Card, CardContent } from '@portfolio/ui';
@@ -18,6 +19,9 @@ interface FeaturedProjectsProps {
   projects: Project[];
 }
 
+/** Auto-advance featured carousel every 3s when multiple projects exist. */
+const FEATURED_AUTOPLAY_MS = 3_000;
+
 export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   const ctaMotion = useAccessibleMotionScale();
 
@@ -30,7 +34,24 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
     [projects.length]
   );
 
-  const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);
+  const autoplayPlugin = useMemo(
+    () =>
+      Autoplay({
+        delay: FEATURED_AUTOPLAY_MS,
+        playOnInit: true,
+        stopOnFocusIn: false,
+        stopOnInteraction: false,
+        stopOnMouseEnter: true,
+      }),
+    []
+  );
+
+  const emblaPlugins = useMemo(
+    () => (projects.length > 1 ? [autoplayPlugin] : []),
+    [projects.length, autoplayPlugin]
+  );
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions, emblaPlugins);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canPrev, setCanPrev] = useState(false);
@@ -53,6 +74,23 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
       emblaApi.off('reInit', onSelect);
     };
   }, [emblaApi, onSelect]);
+
+  useEffect(() => {
+    if (!emblaApi || projects.length <= 1) return;
+    const plugin = emblaApi.plugins().autoplay as
+      | { play: () => void; stop: () => void }
+      | undefined;
+    if (!plugin) return;
+
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => {
+      if (mq.matches) plugin.stop();
+      else plugin.play();
+    };
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, [emblaApi, projects.length]);
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
