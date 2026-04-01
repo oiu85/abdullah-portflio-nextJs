@@ -121,46 +121,74 @@ The platform handles thousands of daily transactions and has helped increase cli
 );
 
 -- ============================================
--- Skills Seed Data
+-- Skill sections + Skills Seed Data
 -- ============================================
-INSERT INTO skills (name, category, proficiency, icon, is_published, display_order) VALUES
--- Frontend
-('React', 'frontend', 95, 'react', true, 1),
-('Next.js', 'frontend', 90, 'nextjs', true, 2),
-('TypeScript', 'frontend', 90, 'typescript', true, 3),
-('Tailwind CSS', 'frontend', 95, 'tailwind', true, 4),
-('Vue.js', 'frontend', 75, 'vue', true, 5),
-('HTML/CSS', 'frontend', 95, 'html', true, 6),
+INSERT INTO skill_sections (slug, label, display_order, is_published) VALUES
+    ('frontend', 'Frontend Development', 0, true),
+    ('backend', 'Backend Development', 10, true),
+    ('database', 'Databases', 20, true),
+    ('devops', 'DevOps & Cloud', 30, true),
+    ('tools', 'Tools & Workflow', 40, true),
+    ('design', 'Design', 50, true),
+    ('soft_skills', 'Soft Skills', 60, true),
+    ('other', 'Other', 70, true);
 
--- Backend
-('Node.js', 'backend', 90, 'nodejs', true, 1),
-('Python', 'backend', 80, 'python', true, 2),
-('Express.js', 'backend', 88, 'express', true, 3),
-('FastAPI', 'backend', 75, 'fastapi', true, 4),
-('GraphQL', 'backend', 82, 'graphql', true, 5),
+INSERT INTO skills (name, section_id, proficiency, icon, is_published, display_order) VALUES
+('React', (SELECT id FROM skill_sections WHERE slug = 'frontend' LIMIT 1), 95, 'react', true, 1),
+('Next.js', (SELECT id FROM skill_sections WHERE slug = 'frontend' LIMIT 1), 90, 'nextjs', true, 2),
+('TypeScript', (SELECT id FROM skill_sections WHERE slug = 'frontend' LIMIT 1), 90, 'typescript', true, 3),
+('Tailwind CSS', (SELECT id FROM skill_sections WHERE slug = 'frontend' LIMIT 1), 95, 'tailwind', true, 4),
+('Vue.js', (SELECT id FROM skill_sections WHERE slug = 'frontend' LIMIT 1), 75, 'vue', true, 5),
+('HTML/CSS', (SELECT id FROM skill_sections WHERE slug = 'frontend' LIMIT 1), 95, 'html', true, 6),
+('Node.js', (SELECT id FROM skill_sections WHERE slug = 'backend' LIMIT 1), 90, 'nodejs', true, 1),
+('Python', (SELECT id FROM skill_sections WHERE slug = 'backend' LIMIT 1), 80, 'python', true, 2),
+('Express.js', (SELECT id FROM skill_sections WHERE slug = 'backend' LIMIT 1), 88, 'express', true, 3),
+('FastAPI', (SELECT id FROM skill_sections WHERE slug = 'backend' LIMIT 1), 75, 'fastapi', true, 4),
+('GraphQL', (SELECT id FROM skill_sections WHERE slug = 'backend' LIMIT 1), 82, 'graphql', true, 5),
+('PostgreSQL', (SELECT id FROM skill_sections WHERE slug = 'database' LIMIT 1), 88, 'postgresql', true, 1),
+('MongoDB', (SELECT id FROM skill_sections WHERE slug = 'database' LIMIT 1), 85, 'mongodb', true, 2),
+('Redis', (SELECT id FROM skill_sections WHERE slug = 'database' LIMIT 1), 78, 'redis', true, 3),
+('Supabase', (SELECT id FROM skill_sections WHERE slug = 'database' LIMIT 1), 90, 'supabase', true, 4),
+('Docker', (SELECT id FROM skill_sections WHERE slug = 'devops' LIMIT 1), 85, 'docker', true, 1),
+('AWS', (SELECT id FROM skill_sections WHERE slug = 'devops' LIMIT 1), 80, 'aws', true, 2),
+('Vercel', (SELECT id FROM skill_sections WHERE slug = 'devops' LIMIT 1), 90, 'vercel', true, 3),
+('GitHub Actions', (SELECT id FROM skill_sections WHERE slug = 'devops' LIMIT 1), 85, 'github', true, 4),
+('Git', (SELECT id FROM skill_sections WHERE slug = 'tools' LIMIT 1), 95, 'git', true, 1),
+('VS Code', (SELECT id FROM skill_sections WHERE slug = 'tools' LIMIT 1), 95, 'vscode', true, 2),
+('Figma', (SELECT id FROM skill_sections WHERE slug = 'tools' LIMIT 1), 80, 'figma', true, 3),
+('Postman', (SELECT id FROM skill_sections WHERE slug = 'tools' LIMIT 1), 88, 'postman', true, 4),
+('UI/UX Design', (SELECT id FROM skill_sections WHERE slug = 'design' LIMIT 1), 80, 'design', true, 1),
+('Responsive Design', (SELECT id FROM skill_sections WHERE slug = 'design' LIMIT 1), 92, 'responsive', true, 2),
+('Accessibility', (SELECT id FROM skill_sections WHERE slug = 'design' LIMIT 1), 85, 'accessibility', true, 3);
 
--- Database
-('PostgreSQL', 'database', 88, 'postgresql', true, 1),
-('MongoDB', 'database', 85, 'mongodb', true, 2),
-('Redis', 'database', 78, 'redis', true, 3),
-('Supabase', 'database', 90, 'supabase', true, 4),
-
--- DevOps
-('Docker', 'devops', 85, 'docker', true, 1),
-('AWS', 'devops', 80, 'aws', true, 2),
-('Vercel', 'devops', 90, 'vercel', true, 3),
-('GitHub Actions', 'devops', 85, 'github', true, 4),
-
--- Tools
-('Git', 'tools', 95, 'git', true, 1),
-('VS Code', 'tools', 95, 'vscode', true, 2),
-('Figma', 'tools', 80, 'figma', true, 3),
-('Postman', 'tools', 88, 'postman', true, 4),
-
--- Design
-('UI/UX Design', 'design', 80, 'design', true, 1),
-('Responsive Design', 'design', 92, 'responsive', true, 2),
-('Accessibility', 'design', 85, 'accessibility', true, 3);
+-- ============================================
+-- Site pages (CMS) — default copy
+-- ============================================
+INSERT INTO site_pages (slug, content) VALUES
+(
+    'home',
+    '{"featured_section":{"title":"Featured Projects","subtitle":"Here are some of my recent projects that showcase my skills and experience."},"skills_preview":{"title":"Skills & Technologies","subtitle":"Technologies and tools I work with to bring ideas to life."}}'::jsonb
+),
+(
+    'footer',
+    '{"brand_mark":"AA","tagline":"Senior Mobile Developer specialized in building high-performance Flutter applications.","quick_links_heading":"Quick Links","connect_heading":"Connect","footer_nav":[{"href":"/about","label":"About"},{"href":"/projects","label":"Projects"},{"href":"/contact","label":"Contact"}],"copyright_holder":"Abdullah Alatrash"}'::jsonb
+),
+(
+    'projects',
+    '{"page_header":{"eyebrow":"Work","title":"Projects","description":"A collection of Flutter and mobile development projects I''ve worked on, from personal experiments to production applications."}}'::jsonb
+),
+(
+    'experience',
+    '{"page_header":{"eyebrow":"Journey","title":"Experience","description":"My professional journey as a Senior Mobile Developer specializing in Flutter and clean architecture."}}'::jsonb
+),
+(
+    'skills',
+    '{"page_header":{"eyebrow":"Expertise","title":"Skills & Technologies","description":"Technologies and tools I use to build high-performance Flutter applications."}}'::jsonb
+),
+(
+    'contact_cta',
+    '{"eyebrow":"Next step","title":"Let''s Work Together","body":"I''m always open to new Flutter development opportunities and interesting mobile projects. Whether you have a question or just want to say hi, feel free to reach out!","primary_label":"Get in Touch","secondary_label":"View All Projects"}'::jsonb
+);
 
 -- ============================================
 -- Experience Seed Data

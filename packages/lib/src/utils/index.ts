@@ -86,19 +86,3 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
   };
 }
 
-// Skill category labels
-export const skillCategoryLabels: Record<string, string> = {
-  frontend: 'Frontend',
-  backend: 'Backend',
-  database: 'Database',
-  devops: 'DevOps',
-  tools: 'Tools',
-  design: 'Design',
-  soft_skills: 'Soft Skills',
-  other: 'Other',
-};
-
-// Get skill category label
-export function getSkillCategoryLabel(category: string): string {
-  return skillCategoryLabels[category] || category;
-}

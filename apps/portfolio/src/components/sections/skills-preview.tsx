@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@portfolio/ui';
 import type { Skill } from '@portfolio/types';
+import type { HomeSiteContent } from '@portfolio/validation';
 import { SkillIcon } from '../skill-icon';
 import { SectionHeader } from '@/components/section-header';
 import { motionDuration, motionEase } from '@/lib/motion';
@@ -12,6 +13,7 @@ import { useAccessibleMotionScale } from '@/hooks/use-accessible-motion-scale';
 
 interface SkillsPreviewProps {
   skills: Skill[];
+  skillsPreview: HomeSiteContent['skills_preview'];
 }
 
 function SkillChip({ skill }: { skill: Skill }) {
@@ -62,7 +64,7 @@ function MarqueeRow({
   );
 }
 
-export function SkillsPreview({ skills }: SkillsPreviewProps) {
+export function SkillsPreview({ skills, skillsPreview }: SkillsPreviewProps) {
   const ctaMotion = useAccessibleMotionScale();
 
   if (skills.length === 0) return null;
@@ -81,8 +83,8 @@ export function SkillsPreview({ skills }: SkillsPreviewProps) {
 
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          title="Skills & Technologies"
-          subtitle="Technologies and tools I work with to bring ideas to life."
+          title={skillsPreview.title}
+          subtitle={skillsPreview.subtitle}
         />
       </div>
 

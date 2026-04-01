@@ -1,6 +1,10 @@
 import { createClient } from './supabase/server';
 import { createBuildClient } from './supabase/build';
-import type { Profile, Project, Skill, Experience } from '@portfolio/types';
+import type { Profile, Project, Skill, Experience, SkillSection } from '@portfolio/types';
+import {
+  parseSiteContentFromRows,
+  type SiteContentBundle,
+} from '@portfolio/validation';
 
 // Get profile data
 export async function getProfile(): Promise<Profile | null> {
@@ -104,19 +108,59 @@ export async function getSkills(): Promise<Skill[]> {
   return data || [];
 }
 
-// Get skills grouped by category
-export async function getSkillsByCategory(): Promise<Record<string, Skill[]>> {
-  const skills = await getSkills();
-  return skills.reduce(
-    (acc, skill) => {
-      if (!acc[skill.category]) {
-        acc[skill.category] = [];
-      }
-      acc[skill.category].push(skill);
-      return acc;
-    },
-    {} as Record<string, Skill[]>
+/** CMS copy for all wired pages. */
+export async function getSiteContent(): Promise<SiteContentBundle> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('site_pages').select('slug, content');
+
+  if (error) {
+    console.error('Error fetching site_pages:', error);
+    return parseSiteContentFromRows([]);
+  }
+
+  return parseSiteContentFromRows(
+    (data || []) as { slug: string; content: unknown }[]
   );
+}
+
+export type SkillGroup = {
+  section: SkillSection;
+  skills: Skill[];
+};
+
+/** Published skills grouped by section order (empty sections omitted). */
+export async function getSkillsBySection(): Promise<SkillGroup[]> {
+  const supabase = await createClient();
+  const { data: sections, error: secErr } = await supabase
+    .from('skill_sections')
+    .select('*')
+    .eq('is_published', true)
+    .order('display_order', { ascending: true });
+
+  if (secErr) {
+    console.error('Error fetching skill_sections:', secErr);
+    return [];
+  }
+  if (!sections?.length) return [];
+
+  const { data: skills, error: skErr } = await supabase
+    .from('skills')
+    .select('*')
+    .eq('is_published', true)
+    .order('display_order', { ascending: true });
+
+  if (skErr) {
+    console.error('Error fetching skills:', skErr);
+    return [];
+  }
+
+  const list = (skills || []) as Skill[];
+  return sections
+    .map((section) => ({
+      section: section as SkillSection,
+      skills: list.filter((s) => s.section_id === section.id),
+    }))
+    .filter((g) => g.skills.length > 0);
 }
 
 // Get all published experience

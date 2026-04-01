@@ -3,24 +3,33 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Github, Linkedin, Twitter, Mail, Copy, Check, X } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { Input, Button } from '@portfolio/ui';
+import type { FooterSiteContent } from '@portfolio/validation';
 
-const socialLinks = [
-  { href: 'https://github.com/oiu85', icon: Github, label: 'GitHub' },
-  { href: 'https://www.linkedin.com/in/abdullah-alatrash-398803391', icon: Linkedin, label: 'LinkedIn' },
-  { href: 'https://x.com/85oiu85', icon: Twitter, label: 'Website' },
-  { href: 'mailto:abdullahalatrash.dev@gmail.com', icon: Mail, label: 'Email' },
-];
+const iconByKey: Record<'github' | 'linkedin' | 'twitter', LucideIcon> = {
+  github: Github,
+  linkedin: Linkedin,
+  twitter: Twitter,
+};
 
-const footerLinks = [
-  { href: '/about', label: 'About' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/contact', label: 'Contact' },
-];
+export type FooterSocialItem =
+  | {
+      kind: 'link';
+      href: string;
+      label: string;
+      iconKey: 'github' | 'linkedin' | 'twitter';
+    }
+  | { kind: 'email'; email: string; label: string };
 
-const EMAIL = 'abdullahalatrash.dev@gmail.com';
+export type FooterProps = {
+  copy: FooterSiteContent;
+  /** Profile email drives copy-to-clipboard; optional social links from profile. */
+  email: string;
+  socialItems: FooterSocialItem[];
+};
 
-export function Footer() {
+export function Footer({ copy, email, socialItems }: FooterProps) {
   const currentYear = new Date().getFullYear();
   const [showEmailCopy, setShowEmailCopy] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -33,30 +42,28 @@ export function Footer() {
       />
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-12">
-          {/* Brand */}
           <div className="space-y-4">
             <Link
               href="/"
               className="inline-flex items-baseline gap-1 text-lg font-semibold tracking-tight transition-colors hover:text-primary"
             >
-              AA
+              {copy.brand_mark}
               <span
                 className="inline-block h-1.5 w-1.5 rounded-full bg-primary"
                 aria-hidden
               />
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Senior Mobile Developer specialized in building high-performance Flutter applications.
+              {copy.tagline}
             </p>
           </div>
 
-          {/* Links */}
           <div className="space-y-4">
             <h4 className="text-xs font-semibold uppercase tracking-eyebrow text-muted-foreground">
-              Quick Links
+              {copy.quick_links_heading}
             </h4>
             <nav className="flex flex-col gap-2">
-              {footerLinks.map((link) => (
+              {copy.footer_nav.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -68,56 +75,54 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Social */}
           <div className="space-y-4">
             <h4 className="text-xs font-semibold uppercase tracking-eyebrow text-muted-foreground">
-              Connect
+              {copy.connect_heading}
             </h4>
             <div className="flex flex-col gap-3">
-              <div className="flex gap-4">
-                {socialLinks.map((social) => {
-                  const isMailto = social.href.startsWith('mailto:');
-                  
-                  if (isMailto) {
+              {socialItems.length > 0 && (
+                <div className="flex flex-wrap gap-4">
+                  {socialItems.map((item) => {
+                    if (item.kind === 'email') {
+                      return (
+                        <button
+                          key="email"
+                          type="button"
+                          onClick={() => setShowEmailCopy(!showEmailCopy)}
+                          className="inline-flex cursor-pointer items-center justify-center rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                          aria-label={item.label}
+                          title={item.label}
+                        >
+                          <Mail className="h-5 w-5" />
+                        </button>
+                      );
+                    }
+                    const Icon = iconByKey[item.iconKey];
                     return (
-                      <button
-                        key={social.label}
-                        type="button"
-                        onClick={() => setShowEmailCopy(!showEmailCopy)}
-                        className="inline-flex cursor-pointer items-center justify-center rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                        aria-label={social.label}
-                        title={social.label}
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex cursor-pointer items-center justify-center rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                        aria-label={item.label}
+                        title={item.label}
                       >
-                        <social.icon className="h-5 w-5" />
-                      </button>
+                        <Icon className="h-5 w-5" />
+                      </a>
                     );
-                  }
-                  
-                  return (
-                    <a
-                      key={social.label}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex cursor-pointer items-center justify-center rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                      aria-label={social.label}
-                      title={social.label}
-                    >
-                      <social.icon className="h-5 w-5" />
-                    </a>
-                  );
-                })}
-              </div>
-              
-              {/* Email Copy Field */}
-              {showEmailCopy && (
-                <div className="flex gap-2 items-center transition-all duration-200">
-                  <div className="flex-1 flex gap-2">
+                  })}
+                </div>
+              )}
+
+              {showEmailCopy && email && (
+                <div className="flex items-center gap-2 transition-all duration-200">
+                  <div className="flex flex-1 gap-2">
                     <Input
                       type="text"
-                      value={EMAIL}
+                      value={email}
                       readOnly
-                      className="text-sm cursor-text"
+                      className="cursor-text text-sm"
                       onClick={(e) => (e.target as HTMLInputElement).select()}
                     />
                     <Button
@@ -126,13 +131,12 @@ export function Footer() {
                       size="icon"
                       onClick={async () => {
                         try {
-                          await navigator.clipboard.writeText(EMAIL);
+                          await navigator.clipboard.writeText(email);
                           setCopied(true);
                           setTimeout(() => setCopied(false), 2000);
-                        } catch (err) {
-                          // Fallback for older browsers
+                        } catch {
                           const input = document.createElement('input');
-                          input.value = EMAIL;
+                          input.value = email;
                           document.body.appendChild(input);
                           input.select();
                           document.execCommand('copy');
@@ -170,9 +174,10 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Copyright */}
         <div className="mt-10 border-t border-border/50 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; {currentYear} Abdullah Alatrash. All rights reserved.</p>
+          <p>
+            &copy; {currentYear} {copy.copyright_holder}. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

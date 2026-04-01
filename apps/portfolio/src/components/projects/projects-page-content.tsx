@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@portfolio/ui';
 import type { Project } from '@portfolio/types';
 import { ProjectCard } from '@/components/projects/project-card';
+import type { PageHeaderCopy } from '@portfolio/validation';
 import { PageShell } from '@/components/page-shell';
 import { PageHeader } from '@/components/page-header';
 import { Reveal } from '@/components/motion/reveal';
@@ -15,16 +16,20 @@ import {
 
 type ProjectsPageContentProps = {
   projects: Project[];
+  pageHeader: PageHeaderCopy;
 };
 
-export function ProjectsPageContent({ projects }: ProjectsPageContentProps) {
+export function ProjectsPageContent({
+  projects,
+  pageHeader,
+}: ProjectsPageContentProps) {
   return (
     <PageShell>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <PageHeader
-          eyebrow="Work"
-          title="Projects"
-          description="A collection of Flutter and mobile development projects I've worked on, from personal experiments to production applications."
+          eyebrow={pageHeader.eyebrow}
+          title={pageHeader.title}
+          description={pageHeader.description}
         />
 
         {projects.length > 0 ? (

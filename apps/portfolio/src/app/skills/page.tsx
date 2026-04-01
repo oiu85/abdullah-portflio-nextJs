@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getSkillsByCategory } from '@/lib/data';
+import { getSiteContent, getSkillsBySection } from '@/lib/data';
 import { SkillsDisplay } from '@/components/skills-display';
 import { PageShell } from '@/components/page-shell';
 import { PageHeader } from '@/components/page-header';
@@ -11,45 +11,33 @@ export const metadata: Metadata = {
 
 export const revalidate = 0; // Revalidate on every request for now to see icons
 
-const categoryLabels: Record<string, string> = {
-  frontend: 'Frontend Development',
-  backend: 'Backend Development',
-  database: 'Databases',
-  devops: 'DevOps & Cloud',
-  tools: 'Tools & Workflow',
-  design: 'Design',
-  soft_skills: 'Soft Skills',
-  other: 'Other',
-};
-
-const categoryOrder = ['frontend', 'backend', 'database', 'devops', 'tools', 'design', 'soft_skills', 'other'];
-
 export default async function SkillsPage() {
-  const skillsByCategory = await getSkillsByCategory();
-
-  const sortedCategories = categoryOrder.filter((cat) => skillsByCategory[cat]?.length > 0);
+  const [skillGroups, siteContent] = await Promise.all([
+    getSkillsBySection(),
+    getSiteContent(),
+  ]);
+  const ph = siteContent.skills.page_header;
 
   return (
     <PageShell>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <PageHeader
-          eyebrow="Expertise"
-          title="Skills & Technologies"
-          description="Technologies and tools I use to build high-performance Flutter applications."
+          eyebrow={ph.eyebrow}
+          title={ph.title}
+          description={ph.description}
         />
 
-        {/* Skills by Category */}
         <div className="mx-auto max-w-5xl space-y-14">
-          {sortedCategories.map((category) => (
+          {skillGroups.map(({ section, skills }) => (
             <SkillsDisplay
-              key={category}
-              title={categoryLabels[category] || category}
-              skills={skillsByCategory[category]}
+              key={section.id}
+              title={section.label}
+              skills={skills}
             />
           ))}
         </div>
 
-        {Object.keys(skillsByCategory).length === 0 && (
+        {skillGroups.length === 0 && (
           <div className="glass-surface-soft mx-auto max-w-lg rounded-2xl py-16 text-center">
             <p className="text-muted-foreground">No skills found.</p>
           </div>

@@ -54,15 +54,36 @@ CREATE INDEX IF NOT EXISTS idx_projects_published ON projects(is_published);
 CREATE INDEX IF NOT EXISTS idx_projects_featured ON projects(is_featured);
 
 -- ============================================
+-- Site pages (CMS copy)
+-- ============================================
+CREATE TABLE IF NOT EXISTS site_pages (
+    slug TEXT PRIMARY KEY,
+    content JSONB NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+-- ============================================
+-- Skill sections (grouping for skills)
+-- ============================================
+CREATE TABLE IF NOT EXISTS skill_sections (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    slug TEXT NOT NULL UNIQUE,
+    label TEXT NOT NULL,
+    display_order INTEGER NOT NULL DEFAULT 0,
+    is_published BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_skill_sections_order ON skill_sections(display_order);
+
+-- ============================================
 -- Skills Table
 -- ============================================
 CREATE TABLE IF NOT EXISTS skills (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(100) NOT NULL,
-    category VARCHAR(50) NOT NULL CHECK (category IN (
-        'frontend', 'backend', 'database', 'devops', 
-        'tools', 'design', 'soft_skills', 'other'
-    )),
+    section_id UUID NOT NULL REFERENCES skill_sections(id) ON DELETE RESTRICT,
     proficiency INTEGER NOT NULL CHECK (proficiency >= 1 AND proficiency <= 100),
     icon TEXT,
     is_published BOOLEAN DEFAULT true,
@@ -71,7 +92,7 @@ CREATE TABLE IF NOT EXISTS skills (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_skills_category ON skills(category);
+CREATE INDEX IF NOT EXISTS idx_skills_section_id ON skills(section_id);
 CREATE INDEX IF NOT EXISTS idx_skills_published ON skills(is_published);
 
 -- ============================================
@@ -133,6 +154,14 @@ CREATE TRIGGER update_profile_updated_at
 
 CREATE TRIGGER update_projects_updated_at
     BEFORE UPDATE ON projects
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_site_pages_updated_at
+    BEFORE UPDATE ON site_pages
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_skill_sections_updated_at
+    BEFORE UPDATE ON skill_sections
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_skills_updated_at

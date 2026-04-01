@@ -18,6 +18,7 @@ import {
   Moon,
   Sun,
   ExternalLink,
+  FileText,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@portfolio/ui';
@@ -26,6 +27,7 @@ import { createClient } from '@/lib/supabase/client';
 
 const navItems = [
   { href: '/', label: 'Overview', icon: LayoutDashboard },
+  { href: '/pages', label: 'Pages', icon: FileText },
   { href: '/projects', label: 'Projects', icon: FolderKanban },
   { href: '/skills', label: 'Skills', icon: Lightbulb },
   { href: '/experience', label: 'Experience', icon: Briefcase },

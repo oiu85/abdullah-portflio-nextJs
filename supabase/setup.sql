@@ -53,14 +53,31 @@ CREATE INDEX IF NOT EXISTS idx_projects_slug ON projects(slug);
 CREATE INDEX IF NOT EXISTS idx_projects_published ON projects(is_published);
 CREATE INDEX IF NOT EXISTS idx_projects_featured ON projects(is_featured);
 
+-- Site pages (CMS)
+CREATE TABLE IF NOT EXISTS site_pages (
+    slug TEXT PRIMARY KEY,
+    content JSONB NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+-- Skill sections
+CREATE TABLE IF NOT EXISTS skill_sections (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    slug TEXT NOT NULL UNIQUE,
+    label TEXT NOT NULL,
+    display_order INTEGER NOT NULL DEFAULT 0,
+    is_published BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_skill_sections_order ON skill_sections(display_order);
+
 -- Skills Table
 CREATE TABLE IF NOT EXISTS skills (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(100) NOT NULL,
-    category VARCHAR(50) NOT NULL CHECK (category IN (
-        'frontend', 'backend', 'database', 'devops', 
-        'tools', 'design', 'soft_skills', 'other'
-    )),
+    section_id UUID NOT NULL REFERENCES skill_sections(id) ON DELETE RESTRICT,
     proficiency INTEGER NOT NULL CHECK (proficiency >= 1 AND proficiency <= 100),
     icon TEXT,
     is_published BOOLEAN DEFAULT true,
@@ -69,7 +86,7 @@ CREATE TABLE IF NOT EXISTS skills (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_skills_category ON skills(category);
+CREATE INDEX IF NOT EXISTS idx_skills_section_id ON skills(section_id);
 CREATE INDEX IF NOT EXISTS idx_skills_published ON skills(is_published);
 
 -- Experience Table
@@ -128,6 +145,16 @@ CREATE TRIGGER update_projects_updated_at
     BEFORE UPDATE ON projects
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_site_pages_updated_at ON site_pages;
+CREATE TRIGGER update_site_pages_updated_at
+    BEFORE UPDATE ON site_pages
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_skill_sections_updated_at ON skill_sections;
+CREATE TRIGGER update_skill_sections_updated_at
+    BEFORE UPDATE ON skill_sections
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 DROP TRIGGER IF EXISTS update_skills_updated_at ON skills;
 CREATE TRIGGER update_skills_updated_at
     BEFORE UPDATE ON skills
@@ -149,6 +176,8 @@ CREATE TRIGGER update_contact_messages_updated_at
 
 ALTER TABLE profile ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE site_pages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE skill_sections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE skills ENABLE ROW LEVEL SECURITY;
 ALTER TABLE experience ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
@@ -164,6 +193,19 @@ CREATE POLICY "Authenticated users can read all projects" ON projects FOR SELECT
 CREATE POLICY "Authenticated users can insert projects" ON projects FOR INSERT TO authenticated WITH CHECK (true);
 CREATE POLICY "Authenticated users can update projects" ON projects FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
 CREATE POLICY "Authenticated users can delete projects" ON projects FOR DELETE TO authenticated USING (true);
+
+-- Site pages Policies
+CREATE POLICY "Site pages are publicly readable" ON site_pages FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Authenticated users can insert site pages" ON site_pages FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Authenticated users can update site pages" ON site_pages FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Authenticated users can delete site pages" ON site_pages FOR DELETE TO authenticated USING (true);
+
+-- Skill sections Policies
+CREATE POLICY "Published skill sections are publicly readable" ON skill_sections FOR SELECT TO anon USING (is_published = true);
+CREATE POLICY "Authenticated users can read all skill sections" ON skill_sections FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Authenticated users can insert skill sections" ON skill_sections FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Authenticated users can update skill sections" ON skill_sections FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Authenticated users can delete skill sections" ON skill_sections FOR DELETE TO authenticated USING (true);
 
 -- Skills Policies
 CREATE POLICY "Published skills are publicly readable" ON skills FOR SELECT TO anon USING (is_published = true);
@@ -207,19 +249,55 @@ INSERT INTO projects (title, slug, short_description, description, technologies,
 ('Task Management App', 'task-management-app', 'A collaborative task management application with real-time updates.', 'Developed a modern task management app with Kanban board and team collaboration features.', ARRAY['React', 'Node.js', 'Socket.io', 'MongoDB', 'Express'], 'https://example-tasks.com', 'https://github.com/johndoe/taskapp', true, true, 2),
 ('AI Content Generator', 'ai-content-generator', 'An AI-powered content generation tool for marketers.', 'Created an AI-powered platform using GPT-4 for content generation.', ARRAY['Python', 'FastAPI', 'OpenAI', 'React', 'PostgreSQL'], 'https://example-ai.com', NULL, true, true, 3);
 
-INSERT INTO skills (name, category, proficiency, icon, is_published, display_order) VALUES
-('React', 'frontend', 95, 'react', true, 1),
-('Next.js', 'frontend', 90, 'nextjs', true, 2),
-('TypeScript', 'frontend', 90, 'typescript', true, 3),
-('Tailwind CSS', 'frontend', 95, 'tailwind', true, 4),
-('Node.js', 'backend', 90, 'nodejs', true, 1),
-('Python', 'backend', 80, 'python', true, 2),
-('PostgreSQL', 'database', 88, 'postgresql', true, 1),
-('MongoDB', 'database', 85, 'mongodb', true, 2),
-('Docker', 'devops', 85, 'docker', true, 1),
-('AWS', 'devops', 80, 'aws', true, 2),
-('Git', 'tools', 95, 'git', true, 1),
-('Figma', 'tools', 80, 'figma', true, 2);
+INSERT INTO skill_sections (slug, label, display_order, is_published) VALUES
+    ('frontend', 'Frontend Development', 0, true),
+    ('backend', 'Backend Development', 10, true),
+    ('database', 'Databases', 20, true),
+    ('devops', 'DevOps & Cloud', 30, true),
+    ('tools', 'Tools & Workflow', 40, true),
+    ('design', 'Design', 50, true),
+    ('soft_skills', 'Soft Skills', 60, true),
+    ('other', 'Other', 70, true);
+
+INSERT INTO skills (name, section_id, proficiency, icon, is_published, display_order) VALUES
+('React', (SELECT id FROM skill_sections WHERE slug = 'frontend' LIMIT 1), 95, 'react', true, 1),
+('Next.js', (SELECT id FROM skill_sections WHERE slug = 'frontend' LIMIT 1), 90, 'nextjs', true, 2),
+('TypeScript', (SELECT id FROM skill_sections WHERE slug = 'frontend' LIMIT 1), 90, 'typescript', true, 3),
+('Tailwind CSS', (SELECT id FROM skill_sections WHERE slug = 'frontend' LIMIT 1), 95, 'tailwind', true, 4),
+('Node.js', (SELECT id FROM skill_sections WHERE slug = 'backend' LIMIT 1), 90, 'nodejs', true, 1),
+('Python', (SELECT id FROM skill_sections WHERE slug = 'backend' LIMIT 1), 80, 'python', true, 2),
+('PostgreSQL', (SELECT id FROM skill_sections WHERE slug = 'database' LIMIT 1), 88, 'postgresql', true, 1),
+('MongoDB', (SELECT id FROM skill_sections WHERE slug = 'database' LIMIT 1), 85, 'mongodb', true, 2),
+('Docker', (SELECT id FROM skill_sections WHERE slug = 'devops' LIMIT 1), 85, 'docker', true, 1),
+('AWS', (SELECT id FROM skill_sections WHERE slug = 'devops' LIMIT 1), 80, 'aws', true, 2),
+('Git', (SELECT id FROM skill_sections WHERE slug = 'tools' LIMIT 1), 95, 'git', true, 1),
+('Figma', (SELECT id FROM skill_sections WHERE slug = 'tools' LIMIT 1), 80, 'figma', true, 2);
+
+INSERT INTO site_pages (slug, content) VALUES
+(
+    'home',
+    '{"featured_section":{"title":"Featured Projects","subtitle":"Here are some of my recent projects that showcase my skills and experience."},"skills_preview":{"title":"Skills & Technologies","subtitle":"Technologies and tools I work with to bring ideas to life."}}'::jsonb
+),
+(
+    'footer',
+    '{"brand_mark":"AA","tagline":"Senior Mobile Developer specialized in building high-performance Flutter applications.","quick_links_heading":"Quick Links","connect_heading":"Connect","footer_nav":[{"href":"/about","label":"About"},{"href":"/projects","label":"Projects"},{"href":"/contact","label":"Contact"}],"copyright_holder":"Abdullah Alatrash"}'::jsonb
+),
+(
+    'projects',
+    '{"page_header":{"eyebrow":"Work","title":"Projects","description":"A collection of Flutter and mobile development projects I''ve worked on, from personal experiments to production applications."}}'::jsonb
+),
+(
+    'experience',
+    '{"page_header":{"eyebrow":"Journey","title":"Experience","description":"My professional journey as a Senior Mobile Developer specializing in Flutter and clean architecture."}}'::jsonb
+),
+(
+    'skills',
+    '{"page_header":{"eyebrow":"Expertise","title":"Skills & Technologies","description":"Technologies and tools I use to build high-performance Flutter applications."}}'::jsonb
+),
+(
+    'contact_cta',
+    '{"eyebrow":"Next step","title":"Let''s Work Together","body":"I''m always open to new Flutter development opportunities and interesting mobile projects. Whether you have a question or just want to say hi, feel free to reach out!","primary_label":"Get in Touch","secondary_label":"View All Projects"}'::jsonb
+);
 
 INSERT INTO experience (company, position, description, location, company_url, start_date, end_date, is_current, is_published, display_order, technologies) VALUES
 ('Tech Innovators Inc.', 'Senior Full-Stack Developer', 'Leading development of enterprise web applications and mentoring junior developers.', 'San Francisco, CA', 'https://techinnovators.com', '2022-01-01', NULL, true, true, 1, ARRAY['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'AWS']),

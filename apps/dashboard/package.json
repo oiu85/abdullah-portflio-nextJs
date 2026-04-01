@@ -11,6 +11,7 @@
   "dependencies": {
     "@portfolio/lib": "workspace:*",
     "@portfolio/types": "workspace:*",
+    "@portfolio/validation": "workspace:*",
     "@portfolio/ui": "workspace:*",
     "@supabase/ssr": "^0.1.0",
     "@supabase/supabase-js": "^2.39.1",

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getExperience } from '@/lib/data';
+import { getExperience, getSiteContent } from '@/lib/data';
 import { ExperiencePageContent } from '@/components/experience/experience-page-content';
 import { PageShell } from '@/components/page-shell';
 
@@ -12,12 +12,18 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function ExperiencePage() {
-  const experiences = await getExperience();
+  const [experiences, siteContent] = await Promise.all([
+    getExperience(),
+    getSiteContent(),
+  ]);
 
   return (
     <PageShell>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <ExperiencePageContent experiences={experiences} />
+        <ExperiencePageContent
+          experiences={experiences}
+          pageHeader={siteContent.experience.page_header}
+        />
       </div>
     </PageShell>
   );

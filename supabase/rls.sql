@@ -5,9 +5,11 @@
 -- Enable RLS on all tables
 ALTER TABLE profile ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE skill_sections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE skills ENABLE ROW LEVEL SECURITY;
 ALTER TABLE experience ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE site_pages ENABLE ROW LEVEL SECURITY;
 
 -- ============================================
 -- Profile Policies
@@ -64,6 +66,61 @@ WITH CHECK (true);
 -- Admin: Authenticated users can delete projects
 CREATE POLICY "Authenticated users can delete projects"
 ON projects FOR DELETE
+TO authenticated
+USING (true);
+
+-- ============================================
+-- Site pages Policies
+-- ============================================
+
+CREATE POLICY "Site pages are publicly readable"
+ON site_pages FOR SELECT
+TO anon, authenticated
+USING (true);
+
+CREATE POLICY "Authenticated users can insert site pages"
+ON site_pages FOR INSERT
+TO authenticated
+WITH CHECK (true);
+
+CREATE POLICY "Authenticated users can update site pages"
+ON site_pages FOR UPDATE
+TO authenticated
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "Authenticated users can delete site pages"
+ON site_pages FOR DELETE
+TO authenticated
+USING (true);
+
+-- ============================================
+-- Skill sections Policies
+-- ============================================
+
+CREATE POLICY "Published skill sections are publicly readable"
+ON skill_sections FOR SELECT
+TO anon
+USING (is_published = true);
+
+CREATE POLICY "Authenticated users can read all skill sections"
+ON skill_sections FOR SELECT
+TO authenticated
+USING (true);
+
+CREATE POLICY "Authenticated users can insert skill sections"
+ON skill_sections FOR INSERT
+TO authenticated
+WITH CHECK (true);
+
+CREATE POLICY "Authenticated users can update skill sections"
+ON skill_sections FOR UPDATE
+TO authenticated
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "Authenticated users can delete skill sections"
+ON skill_sections FOR DELETE
 TO authenticated
 USING (true);
 

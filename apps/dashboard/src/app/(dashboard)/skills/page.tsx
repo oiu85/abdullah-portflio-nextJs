@@ -4,63 +4,60 @@ import { Button, Card, CardContent, Badge } from '@portfolio/ui';
 import { createClient } from '@/lib/supabase/server';
 import { DeleteButton } from '@/components/delete-button';
 import { SkillIcon } from '@/components/skill-icon';
+import { getAllSkillSections } from '@/lib/skill-sections-server';
 import type { Skill } from '@portfolio/types';
-
-const categoryLabels: Record<string, string> = {
-  frontend: 'Frontend',
-  backend: 'Backend',
-  database: 'Database',
-  devops: 'DevOps',
-  tools: 'Tools',
-  design: 'Design',
-  soft_skills: 'Soft Skills',
-  other: 'Other',
-};
 
 async function getSkills(): Promise<Skill[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from('skills')
     .select('*')
-    .order('category')
     .order('display_order');
   return (data || []) as Skill[];
 }
 
 export default async function SkillsPage() {
-  const skills = await getSkills();
+  const [skills, sections] = await Promise.all([
+    getSkills(),
+    getAllSkillSections(),
+  ]);
 
-  // Group skills by category
-  const groupedSkills = skills.reduce<Record<string, Skill[]>>((acc, skill) => {
-    if (!acc[skill.category]) acc[skill.category] = [];
-    acc[skill.category].push(skill);
-    return acc;
-  }, {});
+  const grouped = sections
+    .map((section) => ({
+      section,
+      skills: skills.filter((s) => s.section_id === section.id),
+    }))
+    .filter((g) => g.skills.length > 0);
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-3xl font-bold">Skills</h1>
-          <p className="text-muted-foreground">Manage your skills and technologies</p>
+          <p className="text-muted-foreground">
+            Manage your skills and technologies
+          </p>
         </div>
-        <Button asChild>
-          <Link href="/skills/new">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Skill
-          </Link>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild variant="outline">
+            <Link href="/skills/sections">Manage sections</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/skills/new">
+              <Plus className="mr-2 h-4 w-4" />
+              Add Skill
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      {/* Skills by Category */}
-      {Object.keys(groupedSkills).length > 0 ? (
+      {grouped.length > 0 ? (
         <div className="space-y-8">
-          {Object.entries(groupedSkills).map(([category, categorySkills]) => (
-            <div key={category}>
-              <h2 className="text-xl font-semibold mb-4">{categoryLabels[category] || category}</h2>
+          {grouped.map(({ section, skills: sectionSkills }) => (
+            <div key={section.id}>
+              <h2 className="mb-4 text-xl font-semibold">{section.label}</h2>
               <div className="grid gap-3">
-                {categorySkills.map((skill) => (
+                {sectionSkills.map((skill) => (
                   <Card key={skill.id}>
                     <CardContent className="flex items-center gap-4 p-4">
                       <div className="flex-1">
@@ -71,9 +68,9 @@ export default async function SkillsPage() {
                             {skill.proficiency}%
                           </span>
                         </div>
-                        <div className="h-2 bg-muted rounded-full mt-2 overflow-hidden">
+                        <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
                           <div
-                            className="h-full bg-primary rounded-full"
+                            className="h-full rounded-full bg-primary"
                             style={{ width: `${skill.proficiency}%` }}
                           />
                         </div>
@@ -107,13 +104,18 @@ export default async function SkillsPage() {
       ) : (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <p className="text-muted-foreground mb-4">No skills yet</p>
-            <Button asChild>
-              <Link href="/skills/new">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Your First Skill
-              </Link>
-            </Button>
+            <p className="mb-4 text-muted-foreground">No skills yet</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button asChild variant="outline">
+                <Link href="/skills/sections">Manage sections</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/skills/new">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Your First Skill
+                </Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getProjects } from '@/lib/data';
+import { getProjects, getSiteContent } from '@/lib/data';
 import { ProjectsPageContent } from '@/components/projects/projects-page-content';
 
 export const metadata: Metadata = {
@@ -11,7 +11,15 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function ProjectsPage() {
-  const projects = await getProjects();
+  const [projects, siteContent] = await Promise.all([
+    getProjects(),
+    getSiteContent(),
+  ]);
 
-  return <ProjectsPageContent projects={projects} />;
+  return (
+    <ProjectsPageContent
+      projects={projects}
+      pageHeader={siteContent.projects.page_header}
+    />
+  );
 }

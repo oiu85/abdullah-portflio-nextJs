@@ -6,40 +6,36 @@ import Link from 'next/link';
 import { ArrowLeft, Upload, X } from 'lucide-react';
 import { Button, Input, Label, Card, CardContent, Switch, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@portfolio/ui';
 import { createClient } from '@/lib/supabase/client';
-import type { Skill, SkillCategory } from '@portfolio/types';
-
-const categories = [
-  { value: 'frontend', label: 'Frontend' },
-  { value: 'backend', label: 'Backend' },
-  { value: 'database', label: 'Database' },
-  { value: 'devops', label: 'DevOps' },
-  { value: 'tools', label: 'Tools' },
-  { value: 'design', label: 'Design' },
-  { value: 'soft_skills', label: 'Soft Skills' },
-  { value: 'other', label: 'Other' },
-];
+import type { Skill, SkillSection } from '@portfolio/types';
 
 interface SkillFormProps {
   skill?: Skill;
+  sections: SkillSection[];
 }
 
-export function SkillForm({ skill }: SkillFormProps) {
+export function SkillForm({ skill, sections }: SkillFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [iconFile, setIconFile] = useState<File | null>(null);
   const iconInputRef = useRef<HTMLInputElement>(null);
 
+  const initialSectionId = (() => {
+    const sid = skill?.section_id;
+    if (sid && sections.some((s) => s.id === sid)) return sid;
+    return sections[0]?.id ?? '';
+  })();
+
   const [formData, setFormData] = useState<{
     name: string;
-    category: SkillCategory;
+    section_id: string;
     proficiency: number;
     icon: string;
     is_published: boolean;
     display_order: number;
   }>({
     name: skill?.name || '',
-    category: skill?.category || 'frontend',
+    section_id: initialSectionId,
     proficiency: skill?.proficiency || 80,
     icon: skill?.icon || '',
     is_published: skill?.is_published ?? true,
@@ -127,6 +123,21 @@ export function SkillForm({ skill }: SkillFormProps) {
     }
   };
 
+  if (sections.length === 0) {
+    return (
+      <Card>
+        <CardContent className="space-y-4 p-6">
+          <p className="text-muted-foreground">
+            Create at least one skill section before adding skills.
+          </p>
+          <Button asChild>
+            <Link href="/skills/sections/new">Add skill section</Link>
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <Button variant="ghost" asChild>
@@ -150,20 +161,22 @@ export function SkillForm({ skill }: SkillFormProps) {
             />
           </div>
 
-          {/* Category */}
+          {/* Section */}
           <div className="space-y-2">
-            <Label htmlFor="category">Category *</Label>
+            <Label htmlFor="section_id">Section *</Label>
             <Select
-              value={formData.category}
-              onValueChange={(value) => setFormData((prev) => ({ ...prev, category: value as SkillCategory }))}
+              value={formData.section_id}
+              onValueChange={(value) =>
+                setFormData((prev) => ({ ...prev, section_id: value }))
+              }
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select category" />
+              <SelectTrigger id="section_id">
+                <SelectValue placeholder="Select section" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat.value} value={cat.value}>
-                    {cat.label}
+                {sections.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.label}
                   </SelectItem>
                 ))}
               </SelectContent>

@@ -7,7 +7,8 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { NavigationProgress } from '@/components/layout/navigation-progress';
 import { JsonLd } from '@/components/json-ld';
-import { getProfile } from '@/lib/data';
+import { getProfile, getSiteContent } from '@/lib/data';
+import { buildFooterSocialItems } from '@/lib/footer-socials';
 
 const defaultSiteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
@@ -49,7 +50,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const profile = await getProfile();
+  const [profile, siteContent] = await Promise.all([
+    getProfile(),
+    getSiteContent(),
+  ]);
+  const footerSocialItems = buildFooterSocialItems(profile);
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -60,7 +65,11 @@ export default async function RootLayout({
           <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-1">{children}</main>
-            <Footer />
+            <Footer
+              copy={siteContent.footer}
+              email={profile?.email ?? ''}
+              socialItems={footerSocialItems}
+            />
           </div>
         </Providers>
       </body>

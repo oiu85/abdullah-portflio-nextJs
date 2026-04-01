@@ -71,27 +71,36 @@ export type ProjectUpdate = Partial<ProjectInsert>;
 // ============================================
 // Skills
 // ============================================
+/** Grouping for skills (replaces fixed enum categories). */
+export interface SkillSection extends BaseEntity {
+  slug: string;
+  label: string;
+  display_order: number;
+  is_published: boolean;
+}
+
+export type SkillSectionInsert = Omit<
+  SkillSection,
+  'id' | 'created_at' | 'updated_at'
+>;
+export type SkillSectionUpdate = Partial<SkillSectionInsert>;
+
 export interface Skill extends BaseEntity {
   name: string;
-  category: SkillCategory;
+  section_id: string;
   proficiency: number; // 1-100
   icon?: string;
   is_published: boolean;
   display_order: number;
 }
 
-export type SkillCategory =
-  | 'frontend'
-  | 'backend'
-  | 'database'
-  | 'devops'
-  | 'tools'
-  | 'design'
-  | 'soft_skills'
-  | 'other';
-
 export type SkillInsert = Omit<Skill, 'id' | 'created_at' | 'updated_at'>;
 export type SkillUpdate = Partial<SkillInsert>;
+
+/** Skill row joined with section for admin lists. */
+export type SkillWithSection = Skill & {
+  skill_sections: Pick<SkillSection, 'id' | 'slug' | 'label'> | null;
+};
 
 // ============================================
 // Experience
@@ -161,6 +170,18 @@ export interface PaginatedResponse<T> {
   pageSize: number;
   totalPages: number;
 }
+
+// ============================================
+// Site pages (CMS copy)
+// ============================================
+export interface SitePageRow {
+  slug: string;
+  content: Record<string, unknown>;
+  updated_at: string;
+}
+
+export type SitePageInsert = Omit<SitePageRow, 'updated_at'>;
+export type SitePageUpdate = Partial<Pick<SitePageRow, 'content'>>;
 
 // ============================================
 // Dashboard Stats

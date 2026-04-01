@@ -38,6 +38,9 @@ importers:
       '@portfolio/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@portfolio/validation':
+        specifier: workspace:*
+        version: link:../../packages/validation
       '@supabase/ssr':
         specifier: ^0.1.0
         version: 0.1.0(@supabase/supabase-js@2.89.0)
@@ -156,6 +159,9 @@ importers:
       '@portfolio/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@portfolio/validation':
+        specifier: workspace:*
+        version: link:../../packages/validation
       '@supabase/ssr':
         specifier: ^0.1.0
         version: 0.1.0(@supabase/supabase-js@2.89.0)
@@ -330,6 +336,16 @@ importers:
       tailwindcss:
         specifier: ^3.3.6
         version: 3.4.19
+      typescript:
+        specifier: ^5.3.2
+        version: 5.9.3
+
+  packages/validation:
+    dependencies:
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
       typescript:
         specifier: ^5.3.2
         version: 5.9.3

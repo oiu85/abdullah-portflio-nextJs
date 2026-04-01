@@ -7,13 +7,18 @@ import { Badge, Card, CardContent, CardHeader, CardTitle } from '@portfolio/ui';
 import type { Experience } from '@portfolio/types';
 import { formatDateRange } from '@portfolio/lib/utils';
 import { defaultViewport, motionDuration, motionEase, motionSpring } from '@/lib/motion';
+import type { PageHeaderCopy } from '@portfolio/validation';
 import { PageHeader } from '@/components/page-header';
 
 type ExperiencePageContentProps = {
   experiences: Experience[];
+  pageHeader: PageHeaderCopy;
 };
 
-export function ExperiencePageContent({ experiences }: ExperiencePageContentProps) {
+export function ExperiencePageContent({
+  experiences,
+  pageHeader,
+}: ExperiencePageContentProps) {
   const reduceMotion = useReducedMotion();
 
   const itemTransition = (index: number) => ({
@@ -25,9 +30,9 @@ export function ExperiencePageContent({ experiences }: ExperiencePageContentProp
   return (
     <>
       <PageHeader
-        eyebrow="Journey"
-        title="Experience"
-        description="My professional journey as a Senior Mobile Developer specializing in Flutter and clean architecture."
+        eyebrow={pageHeader.eyebrow}
+        title={pageHeader.title}
+        description={pageHeader.description}
       />
 
       <div className="mx-auto max-w-5xl">

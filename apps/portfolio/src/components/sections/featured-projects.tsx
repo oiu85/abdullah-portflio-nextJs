@@ -9,6 +9,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button, Card, CardContent } from '@portfolio/ui';
 import { cn } from '@portfolio/ui';
 import type { Project } from '@portfolio/types';
+import type { HomeSiteContent } from '@portfolio/validation';
 import { SectionHeader } from '@/components/section-header';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Reveal } from '@/components/motion/reveal';
@@ -17,12 +18,16 @@ import { useAccessibleMotionScale } from '@/hooks/use-accessible-motion-scale';
 
 interface FeaturedProjectsProps {
   projects: Project[];
+  featuredSection: HomeSiteContent['featured_section'];
 }
 
 /** Auto-advance featured carousel every 3s when multiple projects exist. */
 const FEATURED_AUTOPLAY_MS = 3_000;
 
-export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
+export function FeaturedProjects({
+  projects,
+  featuredSection,
+}: FeaturedProjectsProps) {
   const ctaMotion = useAccessibleMotionScale();
 
   const emblaOptions = useMemo(
@@ -103,8 +108,8 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          title="Featured Projects"
-          subtitle="Here are some of my recent projects that showcase my skills and experience."
+          title={featuredSection.title}
+          subtitle={featuredSection.subtitle}
         />
 
         {projects.length === 0 ? (
