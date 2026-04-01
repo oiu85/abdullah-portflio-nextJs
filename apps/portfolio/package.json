@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
     "@portfolio/lib": "workspace:*",
     "@portfolio/types": "workspace:*",
     "@portfolio/ui": "workspace:*",
@@ -16,17 +18,20 @@
     "@supabase/supabase-js": "^2.39.1",
     "@tanstack/react-query": "^5.13.4",
     "clsx": "^2.0.0",
+    "dompurify": "^3.0.6",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "framer-motion": "^10.16.16",
+    "isomorphic-dompurify": "^2.9.0",
     "lucide-react": "^0.294.0",
     "next": "^14.0.4",
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwind-merge": "^2.1.0",
-    "dompurify": "^3.0.6",
-    "isomorphic-dompurify": "^2.9.0"
+    "tailwind-merge": "^2.1.0"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",

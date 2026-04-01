@@ -4,6 +4,9 @@
 
 @layer base {
   :root {
+    /* Self-hosted via @fontsource (no Google Fonts network fetch at dev/build time) */
+    --font-inter: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;

@@ -1,22 +1,19 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import '@fontsource-variable/inter/wght.css';
+import '@fontsource/jetbrains-mono/latin.css';
 import './globals.css';
 import { Providers } from './providers';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { NavigationProgress } from '@/components/layout/navigation-progress';
+import { JsonLd } from '@/components/json-ld';
+import { getProfile } from '@/lib/data';
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-});
+const defaultSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(defaultSiteUrl),
   title: {
     default: 'Abdullah Alatrash | Senior Mobile Developer',
     template: '%s | Abdullah Alatrash',
@@ -26,19 +23,20 @@ export const metadata: Metadata = {
   keywords: ['developer', 'portfolio', 'flutter', 'mobile', 'dart', 'clean architecture'],
   authors: [{ name: 'Abdullah Alatrash' }],
   creator: 'Abdullah Alatrash',
-  icons: {
-    icon: '/favicon.png',
-    shortcut: '/favicon.png',
-    apple: '/favicon.png',
-  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
     siteName: 'Abdullah Alatrash Portfolio',
+    title: 'Abdullah Alatrash | Senior Mobile Developer',
+    description:
+      'Senior Mobile Developer specialized in building high-performance Flutter applications using clean and scalable architectures.',
   },
   twitter: {
     card: 'summary_large_image',
     creator: '@oiu85',
+    title: 'Abdullah Alatrash | Senior Mobile Developer',
+    description:
+      'Senior Mobile Developer specialized in building high-performance Flutter applications using clean and scalable architectures.',
   },
   robots: {
     index: true,
@@ -46,14 +44,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const profile = await getProfile();
+
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
+        <JsonLd profile={profile} siteUrl={defaultSiteUrl} />
         <Providers>
           <NavigationProgress />
           <div className="flex min-h-screen flex-col">

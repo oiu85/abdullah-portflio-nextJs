@@ -12,6 +12,7 @@ export interface BaseEntity {
 // ============================================
 // Profile
 // ============================================
+/** Align `title`, `short_bio`, and `bio` with root layout metadata and hero copy. */
 export interface Profile extends BaseEntity {
   full_name: string;
   title: string;
@@ -43,6 +44,10 @@ export type ProfileUpdate = Partial<ProfileInsert>;
 // ============================================
 // Projects
 // ============================================
+/**
+ * CMS content tips: `short_description` = one-line value proposition.
+ * `description` (HTML): problem → approach → measurable outcome → stack highlights.
+ */
 export interface Project extends BaseEntity {
   title: string;
   slug: string;

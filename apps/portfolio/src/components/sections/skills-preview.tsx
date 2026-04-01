@@ -6,6 +6,7 @@ import { ArrowRight } from 'lucide-react';
 import { Button, Badge } from '@portfolio/ui';
 import type { Skill } from '@portfolio/types';
 import { SkillIcon } from '../skill-icon';
+import { SectionHeader } from '@/components/section-header';
 
 interface SkillsPreviewProps {
   skills: Skill[];
@@ -28,26 +29,10 @@ export function SkillsPreview({ skills }: SkillsPreviewProps) {
   return (
     <section className="py-24 bg-muted/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold mb-4"
-          >
-            Skills & Technologies
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-lg text-muted-foreground max-w-2xl mx-auto"
-          >
-            Technologies and tools I work with to bring ideas to life.
-          </motion.p>
-        </div>
+        <SectionHeader
+          title="Skills & Technologies"
+          subtitle="Technologies and tools I work with to bring ideas to life."
+        />
 
         <motion.div
           initial={{ opacity: 0 }}

@@ -6,38 +6,37 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ExternalLink, Github } from 'lucide-react';
 import { Button, Card, CardContent, Badge } from '@portfolio/ui';
 import type { Project } from '@portfolio/types';
+import { SectionHeader } from '@/components/section-header';
 
 interface FeaturedProjectsProps {
   projects: Project[];
 }
 
 export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
-  if (projects.length === 0) return null;
-
   return (
     <section className="py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold mb-4"
-          >
-            Featured Projects
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-lg text-muted-foreground max-w-2xl mx-auto"
-          >
-            Here are some of my recent projects that showcase my skills and experience.
-          </motion.p>
-        </div>
+        <SectionHeader
+          title="Featured Projects"
+          subtitle="Here are some of my recent projects that showcase my skills and experience."
+        />
 
+        {projects.length === 0 ? (
+          <Card className="max-w-lg mx-auto border-dashed bg-muted/30">
+            <CardContent className="py-10 px-6 text-center space-y-4">
+              <p className="text-muted-foreground">
+                No featured projects are highlighted yet. Browse the full list for case studies and
+                work samples.
+              </p>
+              <Button asChild>
+                <Link href="/projects">
+                  View all projects
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
             <motion.div
@@ -130,8 +129,9 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             </motion.div>
           ))}
         </div>
+        )}
 
-        {/* View All Button */}
+        {projects.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -146,6 +146,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             </Link>
           </Button>
         </motion.div>
+        )}
       </div>
     </section>
   );

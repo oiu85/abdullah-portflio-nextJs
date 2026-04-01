@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, Download, Github, Linkedin, Twitter, Mail } from 'lucide-react';
+import { ArrowRight, Github, Linkedin, Twitter, Mail } from 'lucide-react';
 import { Button, Badge } from '@portfolio/ui';
 import type { Profile } from '@portfolio/types';
 
@@ -151,7 +151,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
             className="mb-10"
           >
             <Image
-              src={profile?.avatar_url || '/images/my_image.jpg'}
+              src={profile?.avatar_url || '/images/avatar-placeholder.svg'}
               alt={profile?.full_name || 'Profile Picture'}
               width={200}
               height={200}
