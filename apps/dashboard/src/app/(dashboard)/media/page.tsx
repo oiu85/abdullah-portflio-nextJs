@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/client';
-import { Button } from '@portfolio/ui';
+import { Button, Spinner } from '@portfolio/ui';
 import { Upload, Trash2, Copy, Check, Image as ImageIcon, FileText, X } from 'lucide-react';
 
 interface StorageFile {
@@ -175,8 +175,15 @@ export default function MediaPage() {
                 </div>
               ))}
             </div>
-            <Button onClick={handleUpload} disabled={uploading}>
-              {uploading ? 'Uploading...' : `Upload ${selectedFiles.length} file(s)`}
+            <Button onClick={handleUpload} disabled={uploading || uploadMutation.isPending}>
+              {uploading || uploadMutation.isPending ? (
+                <span className="inline-flex items-center gap-2">
+                  <Spinner size="sm" />
+                  Uploading…
+                </span>
+              ) : (
+                `Upload ${selectedFiles.length} file(s)`
+              )}
             </Button>
           </div>
         )}
@@ -184,9 +191,9 @@ export default function MediaPage() {
 
       {/* Files Grid */}
       {isLoading ? (
-        <div className="text-center py-12">
-          <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto" />
-          <p className="mt-4 text-muted-foreground">Loading files...</p>
+        <div className="flex flex-col items-center justify-center gap-4 py-12">
+          <Spinner size="lg" />
+          <p className="text-sm text-muted-foreground">Loading files…</p>
         </div>
       ) : files.length === 0 ? (
         <div className="text-center py-12">
