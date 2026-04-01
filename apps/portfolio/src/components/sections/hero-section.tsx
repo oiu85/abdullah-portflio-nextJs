@@ -126,6 +126,13 @@ export function HeroSection({ profile }: HeroSectionProps) {
         />
       </div>
 
+      <div
+        className="pointer-events-none absolute inset-0 -z-[1] overflow-hidden"
+        aria-hidden
+      >
+        <div className="liquid-glass-layer opacity-[0.45]" />
+      </div>
+
       <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-center px-4 py-10 text-center sm:px-6 lg:px-8">
       <motion.div
         className="mx-auto w-full max-w-4xl"
@@ -235,7 +242,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
                 href={profile.social_links.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-border/60 bg-muted/80 p-3 shadow-sm backdrop-blur-sm transition-all hover:border-primary/25 hover:bg-muted hover:shadow-md"
+                className="glass-chip rounded-full p-3 transition-all hover:border-primary/30 hover:shadow-md"
                 aria-label="GitHub"
                 whileHover={{ y: -3, scale: 1.05 }}
                 whileTap={{ scale: 0.97 }}
@@ -248,7 +255,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
                 href={profile.social_links.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-border/60 bg-muted/80 p-3 shadow-sm backdrop-blur-sm transition-all hover:border-primary/25 hover:bg-muted hover:shadow-md"
+                className="glass-chip rounded-full p-3 transition-all hover:border-primary/30 hover:shadow-md"
                 aria-label="LinkedIn"
                 whileHover={{ y: -3, scale: 1.05 }}
                 whileTap={{ scale: 0.97 }}
@@ -261,7 +268,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
                 href={profile.social_links.twitter}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-border/60 bg-muted/80 p-3 shadow-sm backdrop-blur-sm transition-all hover:border-primary/25 hover:bg-muted hover:shadow-md"
+                className="glass-chip rounded-full p-3 transition-all hover:border-primary/30 hover:shadow-md"
                 aria-label="Twitter"
                 whileHover={{ y: -3, scale: 1.05 }}
                 whileTap={{ scale: 0.97 }}
@@ -281,7 +288,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: motionDuration.sm }}
       >
-        <div className="flex h-10 w-6 items-start justify-center rounded-full border border-muted-foreground/25 bg-background/40 p-1 shadow-sm backdrop-blur-sm">
+        <div className="glass-chip flex h-10 w-6 items-start justify-center rounded-full p-1">
           <motion.div
             animate={reduceMotion ? undefined : { y: [0, 12, 0] }}
             transition={

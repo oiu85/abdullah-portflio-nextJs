@@ -81,7 +81,7 @@ function SingleProjectHeroImage({
     <div className="mb-8">
       <button
         type="button"
-        className="group relative aspect-video w-full overflow-hidden rounded-2xl bg-muted/80 text-left shadow-card outline-none ring-1 ring-border/45 transition-[box-shadow,transform] hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-ring"
+        className="glass-surface group relative aspect-video w-full overflow-hidden rounded-2xl text-left outline-none transition-[box-shadow,transform] hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-ring"
         onClick={onOpen}
         aria-label="Open image in fullscreen"
       >
@@ -94,7 +94,7 @@ function SingleProjectHeroImage({
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 896px"
         />
         <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-        <span className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full border border-border/40 bg-background/90 px-3 py-1.5 text-xs font-medium text-foreground shadow-card opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+        <span className="glass-chip pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-foreground opacity-0 transition-opacity group-hover:opacity-100">
           <Maximize2 className="h-3.5 w-3.5" aria-hidden />
           Fullscreen
         </span>
@@ -198,7 +198,7 @@ function ProjectImageSlider({
   return (
     <div className="mb-8 space-y-4">
       <div
-        className="relative overflow-hidden rounded-2xl shadow-card ring-1 ring-border/45"
+        className="glass-surface relative overflow-hidden rounded-2xl"
         role="region"
         aria-roledescription="carousel"
         aria-label={`${projectTitle} screenshots`}
@@ -230,7 +230,7 @@ function ProjectImageSlider({
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 896px"
                   />
                   <span className="pointer-events-none absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
-                  <span className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full border border-border/40 bg-background/90 px-3 py-1.5 text-xs font-medium text-foreground shadow-card opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+                  <span className="glass-chip pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-foreground opacity-0 transition-opacity group-hover:opacity-100">
                     <Maximize2 className="h-3.5 w-3.5" aria-hidden />
                     Fullscreen
                   </span>
@@ -245,7 +245,7 @@ function ProjectImageSlider({
           variant="secondary"
           size="icon"
           className={cn(
-            'absolute left-2 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full border border-border/60 bg-background/90 shadow-card backdrop-blur-md transition-shadow hover:shadow-card-hover',
+            'glass-chip absolute left-2 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full transition-shadow hover:shadow-card-hover',
             !canPrev && 'pointer-events-none opacity-40'
           )}
           onClick={scrollPrev}
@@ -259,7 +259,7 @@ function ProjectImageSlider({
           variant="secondary"
           size="icon"
           className={cn(
-            'absolute right-2 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full border border-border/60 bg-background/90 shadow-card backdrop-blur-md transition-shadow hover:shadow-card-hover',
+            'glass-chip absolute right-2 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full transition-shadow hover:shadow-card-hover',
             !canNext && 'pointer-events-none opacity-40'
           )}
           onClick={scrollNext}
@@ -270,7 +270,7 @@ function ProjectImageSlider({
         </Button>
 
         <div
-          className="pointer-events-none absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border/40 bg-background/90 px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-card backdrop-blur-md"
+          className="glass-chip pointer-events-none absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground"
           aria-live="polite"
         >
           {selectedIndex + 1} / {allImages.length}

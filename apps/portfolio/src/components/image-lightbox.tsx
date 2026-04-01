@@ -68,17 +68,17 @@ export function ImageLightbox({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="max-h-[95vh] w-full max-w-7xl border-0 bg-transparent p-0 shadow-none [&>button]:hidden [&>div]:bg-black/88 [&>div]:backdrop-blur-md"
+        className="max-h-[95vh] w-full max-w-7xl border-0 bg-transparent p-0 shadow-none transition-none [&>button]:hidden [&>div]:bg-black/85 [&>div]:backdrop-blur-xl [&>div]:transition-colors [&>div]:duration-300"
         onInteractOutside={onClose}
       >
         <DialogTitle className="sr-only">
           Image Lightbox - {alt} {currentIndex + 1} of {images.length}
         </DialogTitle>
         <motion.div
-          initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
+          initial={reduceMotion ? false : { opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{
-            duration: motionDuration.sm,
+            duration: motionDuration.md,
             ease: motionEase.out,
           }}
           className="relative flex h-full w-full items-center justify-center"
@@ -86,7 +86,7 @@ export function ImageLightbox({
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-4 top-4 z-50 rounded-full border border-border/40 bg-background/85 text-foreground shadow-card backdrop-blur-md transition-shadow hover:bg-background hover:shadow-card-hover"
+            className="glass-chip absolute right-4 top-4 z-50 rounded-full text-foreground transition-shadow hover:shadow-card-hover"
             onClick={onClose}
             aria-label="Close"
           >
@@ -97,7 +97,7 @@ export function ImageLightbox({
             <Button
               variant="ghost"
               size="icon"
-              className="absolute left-4 top-1/2 z-50 -translate-y-1/2 rounded-full border border-border/40 bg-background/85 text-foreground shadow-card backdrop-blur-md hover:bg-background hover:shadow-card-hover"
+              className="glass-chip absolute left-4 top-1/2 z-50 -translate-y-1/2 rounded-full text-foreground hover:shadow-card-hover"
               onClick={handlePrevious}
               aria-label="Previous image"
             >
@@ -109,7 +109,7 @@ export function ImageLightbox({
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-4 top-1/2 z-50 -translate-y-1/2 rounded-full border border-border/40 bg-background/85 text-foreground shadow-card backdrop-blur-md hover:bg-background hover:shadow-card-hover"
+              className="glass-chip absolute right-4 top-1/2 z-50 -translate-y-1/2 rounded-full text-foreground hover:shadow-card-hover"
               onClick={handleNext}
               aria-label="Next image"
             >
@@ -143,7 +143,7 @@ export function ImageLightbox({
           </div>
 
           {images.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full border border-border/40 bg-background/85 px-4 py-2 text-sm text-foreground shadow-card backdrop-blur-md">
+            <div className="glass-chip absolute bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full px-4 py-2 text-sm text-foreground">
               {currentIndex + 1} / {images.length}
             </div>
           )}

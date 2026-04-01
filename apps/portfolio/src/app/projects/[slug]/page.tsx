@@ -8,6 +8,7 @@ import { formatDate } from '@portfolio/lib/utils';
 import { ProjectImages, ProjectImagesProvider } from '@/components/project-images';
 import { SafeHtml } from '@/components/safe-html';
 import { PageShell } from '@/components/page-shell';
+import { Reveal } from '@/components/motion/reveal';
 
 interface ProjectPageProps {
   params: { slug: string };
@@ -52,7 +53,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <div className="mb-8">
           <Button
             variant="ghost"
-            className="-ml-2 rounded-full border border-transparent px-3 transition-colors hover:border-border/60 hover:bg-muted/50"
+            className="glass-chip -ml-2 rounded-full px-3 transition-colors hover:border-primary/25"
             asChild
           >
             <Link href="/projects">
@@ -69,6 +70,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         >
           <div className="mx-auto max-w-4xl">
             {/* Header */}
+            <Reveal>
             <header className="mb-10">
               <p className="mb-3 text-[0.7rem] font-medium uppercase tracking-eyebrow text-muted-foreground md:text-xs">
                 Case study
@@ -78,7 +80,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   <Badge className="border border-primary/20 shadow-sm">Featured</Badge>
                 )}
                 {project.start_date && (
-                  <div className="flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/40 px-3 py-1 text-sm text-muted-foreground backdrop-blur-sm">
+                  <div className="glass-chip flex items-center gap-1.5 rounded-full px-3 py-1 text-sm text-muted-foreground">
                     <Calendar className="h-4 w-4 shrink-0" />
                     {formatDate(project.start_date, { year: 'numeric', month: 'long' })}
                     {project.end_date &&
@@ -93,8 +95,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 {project.short_description}
               </p>
             </header>
+            </Reveal>
 
             {/* Actions — stack and CTAs before deep content */}
+            <Reveal>
             <div className="mb-10 flex flex-wrap gap-3">
               {project.live_url && (
                 <Button
@@ -116,9 +120,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </Button>
               )}
             </div>
+            </Reveal>
 
             {/* Technologies */}
-            <div className="mb-10 rounded-2xl border border-border/50 bg-card/40 p-5 shadow-card backdrop-blur-sm md:p-6">
+            <Reveal>
+            <div className="glass-surface-strong mb-10 rounded-2xl p-5 md:p-6">
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-eyebrow text-muted-foreground">
                 Technologies
               </h2>
@@ -134,6 +140,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 ))}
               </div>
             </div>
+            </Reveal>
 
             {/* Image carousel (featured + gallery) */}
             <ProjectImages
@@ -143,12 +150,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             />
 
             {/* Description */}
-            <div className="prose prose-neutral mt-10 max-w-none rounded-2xl border border-border/40 bg-card/30 p-6 shadow-sm backdrop-blur-sm dark:prose-invert md:p-8">
+            <Reveal>
+            <div className="glass-surface prose prose-neutral mt-10 max-w-none rounded-2xl p-6 dark:prose-invert md:p-8">
               <h2 className="!mt-0 text-balance font-semibold tracking-tight">
                 About This Project
               </h2>
               <SafeHtml content={project.description} />
             </div>
+            </Reveal>
           </div>
         </ProjectImagesProvider>
       </div>

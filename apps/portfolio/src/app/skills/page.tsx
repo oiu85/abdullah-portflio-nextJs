@@ -50,7 +50,7 @@ export default async function SkillsPage() {
         </div>
 
         {Object.keys(skillsByCategory).length === 0 && (
-          <div className="py-16 text-center">
+          <div className="glass-surface-soft mx-auto max-w-lg rounded-2xl py-16 text-center">
             <p className="text-muted-foreground">No skills found.</p>
           </div>
         )}

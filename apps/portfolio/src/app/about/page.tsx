@@ -7,6 +7,7 @@ import { getProfile, getExperience } from '@/lib/data';
 import { formatDateRange } from '@portfolio/lib/utils';
 import { PageShell } from '@/components/page-shell';
 import { PageHeader } from '@/components/page-header';
+import { Reveal } from '@/components/motion/reveal';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -35,7 +36,8 @@ export default async function AboutPage() {
             <div className="md:col-span-1">
               <div className="sticky top-24 space-y-6">
                 {/* Avatar */}
-                <div className="relative mx-auto h-48 w-48 overflow-hidden rounded-2xl bg-muted/80 shadow-card ring-1 ring-border/50">
+                <Reveal>
+                <div className="glass-surface-soft relative mx-auto h-48 w-48 overflow-hidden rounded-2xl ring-1 ring-border/45">
                   <div className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-br from-primary/15 via-transparent to-transparent opacity-80" />
                   {profile?.avatar_url ? (
                     <Image
@@ -51,9 +53,11 @@ export default async function AboutPage() {
                     </div>
                   )}
                 </div>
+                </Reveal>
 
                 {/* Quick Info */}
-                <Card className="border-border/60 shadow-card transition-shadow hover:shadow-card-hover">
+                <Reveal>
+                <Card className="glass-surface transition-shadow hover:shadow-card-hover">
                   <CardContent className="space-y-3 p-4">
                     {profile?.location && (
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -81,9 +85,11 @@ export default async function AboutPage() {
                     )}
                   </CardContent>
                 </Card>
+                </Reveal>
 
                 {/* Resume Download */}
                 {profile?.resume_url && (
+                  <Reveal>
                   <Button
                     className="w-full shadow-card transition-shadow hover:shadow-card-hover"
                     asChild
@@ -93,13 +99,15 @@ export default async function AboutPage() {
                       Download Resume
                     </a>
                   </Button>
+                  </Reveal>
                 )}
               </div>
             </div>
 
             {/* Bio */}
             <div className="space-y-8 md:col-span-2">
-              <div className="rounded-2xl border border-border/50 bg-card/40 p-6 shadow-card backdrop-blur-sm md:p-8">
+              <Reveal>
+              <div className="glass-surface-strong rounded-2xl p-6 md:p-8">
                 <h2 className="mb-2 text-2xl font-semibold tracking-tight">
                   {profile?.full_name || 'John Doe'}
                 </h2>
@@ -118,9 +126,11 @@ export default async function AboutPage() {
                   )}
                 </div>
               </div>
+              </Reveal>
 
               {/* Experience Timeline */}
               {experiences.length > 0 && (
+                <Reveal>
                 <div>
                   <h3 className="mb-6 text-lg font-semibold tracking-tight">
                     Experience
@@ -129,7 +139,7 @@ export default async function AboutPage() {
                     {experiences.slice(0, 3).map((exp) => (
                       <div
                         key={exp.id}
-                        className="rounded-2xl border border-border/60 bg-card/50 p-5 shadow-sm transition-[box-shadow,border-color] hover:border-primary/20 hover:shadow-card"
+                        className="glass-surface rounded-2xl p-5 transition-[box-shadow,border-color] hover:border-primary/25 hover:shadow-card-hover"
                       >
                         <div className="mb-1 flex items-center gap-2 text-sm text-muted-foreground">
                           <Calendar className="h-3.5 w-3.5 shrink-0" />
@@ -144,6 +154,7 @@ export default async function AboutPage() {
                     <Link href="/experience">View Full Experience</Link>
                   </Button>
                 </div>
+                </Reveal>
               )}
             </div>
           </div>

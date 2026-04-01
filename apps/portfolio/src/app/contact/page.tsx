@@ -8,6 +8,7 @@ import {
   ContactHeroImage,
 } from '@/components/contact-hero-image';
 import { PageShell } from '@/components/page-shell';
+import { Reveal } from '@/components/motion/reveal';
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -29,6 +30,7 @@ export default async function ContactPage() {
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title row: heading left, hero art right (same band as reference — no extra panel) */}
         <section className="relative mx-auto mb-14 max-w-6xl lg:mb-16">
+          <Reveal>
           <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
             <div className="relative z-10 w-full max-w-2xl text-center lg:max-w-xl lg:text-left">
               <p className="mb-3 text-[0.7rem] font-medium uppercase tracking-eyebrow text-muted-foreground md:text-xs">
@@ -45,12 +47,13 @@ export default async function ContactPage() {
               <ContactHeroImage src={CONTACT_HERO_IMAGE} alt={contactHeroAlt} />
             </div>
           </div>
+          </Reveal>
         </section>
 
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-10 lg:grid-cols-3 lg:gap-12">
           <div className="space-y-4 lg:col-span-1">
             {profile?.email && (
-              <Card className="border-border/60 shadow-card transition-shadow hover:shadow-card-hover">
+              <Card className="glass-surface transition-shadow hover:shadow-card-hover">
                 <CardContent className="flex items-center gap-3 p-4">
                   <div className="rounded-xl bg-primary/10 p-2.5 ring-1 ring-primary/15">
                     <Mail className="h-5 w-5 text-primary" />
@@ -69,7 +72,7 @@ export default async function ContactPage() {
             )}
 
             {profile?.phone && (
-              <Card className="border-border/60 shadow-card transition-shadow hover:shadow-card-hover">
+              <Card className="glass-surface transition-shadow hover:shadow-card-hover">
                 <CardContent className="flex items-center gap-3 p-4">
                   <div className="rounded-xl bg-primary/10 p-2.5 ring-1 ring-primary/15">
                     <Phone className="h-5 w-5 text-primary" />
@@ -88,7 +91,7 @@ export default async function ContactPage() {
             )}
 
             {profile?.location && (
-              <Card className="border-border/60 shadow-card transition-shadow hover:shadow-card-hover">
+              <Card className="glass-surface transition-shadow hover:shadow-card-hover">
                 <CardContent className="flex items-center gap-3 p-4">
                   <div className="rounded-xl bg-primary/10 p-2.5 ring-1 ring-primary/15">
                     <MapPin className="h-5 w-5 text-primary" />
@@ -103,7 +106,7 @@ export default async function ContactPage() {
           </div>
 
           <div className="lg:col-span-2">
-            <Card className="border-border/60 shadow-card">
+            <Card className="glass-surface-strong">
               <CardHeader className="space-y-1 pb-2">
                 <CardTitle className="text-xl font-semibold tracking-tight">
                   Send a Message

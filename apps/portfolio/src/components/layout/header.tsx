@@ -63,9 +63,9 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed left-0 right-0 top-0 z-50 transition-[background,box-shadow,border-color] duration-500 ease-out',
+        'fixed left-0 right-0 top-0 z-50 transition-[background,box-shadow,border-color,backdrop-filter] duration-500 ease-out',
         isScrolled || isMobileMenuOpen
-          ? 'border-b border-border/40 bg-background/75 shadow-sm shadow-black/[0.03] backdrop-blur-xl dark:shadow-black/20'
+          ? 'border-b glass-nav'
           : 'border-b border-transparent bg-transparent'
       )}
     >
@@ -84,7 +84,7 @@ export function Header() {
             </span>
           </Link>
 
-          <div className="hidden items-center rounded-full border border-border/50 bg-muted/30 p-1 shadow-sm backdrop-blur-md md:flex">
+          <div className="glass-nav-pill hidden items-center rounded-full p-1 md:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -149,7 +149,7 @@ export function Header() {
               transition={{ duration: 0.2 }}
               className="overflow-hidden border-t md:hidden"
             >
-              <div className="space-y-1 rounded-2xl border border-border/50 bg-background/95 py-3 shadow-card backdrop-blur-lg">
+              <div className="glass-surface-strong space-y-1 rounded-2xl py-3">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}

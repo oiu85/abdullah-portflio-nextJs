@@ -6,7 +6,7 @@ import { MapPin, Calendar, ExternalLink } from 'lucide-react';
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '@portfolio/ui';
 import type { Experience } from '@portfolio/types';
 import { formatDateRange } from '@portfolio/lib/utils';
-import { defaultViewport, motionDuration, motionEase } from '@/lib/motion';
+import { defaultViewport, motionDuration, motionEase, motionSpring } from '@/lib/motion';
 import { PageHeader } from '@/components/page-header';
 
 type ExperiencePageContentProps = {
@@ -73,8 +73,17 @@ export function ExperiencePageContent({ experiences }: ExperiencePageContentProp
                     whileInView={{ opacity: 1, y: 0, x: 0 }}
                     viewport={defaultViewport}
                     transition={itemTransition(index)}
+                    whileHover={
+                      reduceMotion
+                        ? undefined
+                        : {
+                            y: -5,
+                            transition: motionSpring.soft,
+                          }
+                    }
+                    whileTap={reduceMotion ? undefined : { scale: 0.995 }}
                   >
-                    <Card className="w-full rounded-2xl border-border/60 shadow-card transition-[box-shadow,border-color] hover:border-primary/15 hover:shadow-card-hover">
+                    <Card className="glass-surface w-full rounded-2xl transition-[box-shadow,border-color] hover:border-primary/25 hover:shadow-card-hover">
                       <CardHeader className="pb-4">
                         <div
                           className={`flex gap-4 ${
@@ -175,7 +184,7 @@ export function ExperiencePageContent({ experiences }: ExperiencePageContentProp
             </div>
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-border/70 bg-muted/20 py-16 text-center shadow-card">
+          <div className="glass-surface-soft rounded-2xl border-dashed py-16 text-center">
             <p className="text-muted-foreground">No experience entries found.</p>
           </div>
         )}

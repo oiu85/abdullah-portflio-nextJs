@@ -12,7 +12,7 @@ import { useCallback } from 'react';
 import { ExternalLink, Github, ArrowRight } from 'lucide-react';
 import { Button, Card, CardContent, Badge } from '@portfolio/ui';
 import type { Project } from '@portfolio/types';
-import { motionDuration, motionEase } from '@/lib/motion';
+import { motionDuration, motionEase, motionSpring } from '@/lib/motion';
 
 const springConfig = { stiffness: 260, damping: 28 };
 
@@ -22,12 +22,18 @@ type ProjectCardProps = {
   showFeaturedBadge?: boolean;
   /** Stagger index for whileInView delay. */
   index?: number;
+  /**
+   * When false, outer entrance is skipped (e.g. parent stagger container).
+   * @default true
+   */
+  animateEntrance?: boolean;
 };
 
 export function ProjectCard({
   project,
   showFeaturedBadge = false,
   index = 0,
+  animateEntrance = true,
 }: ProjectCardProps) {
   const reduceMotion = useReducedMotion();
   const rotateX = useSpring(0, springConfig);
@@ -53,17 +59,31 @@ export function ProjectCard({
 
   const transform = useMotionTemplate`perspective(960px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
+  const entranceProps = animateEntrance
+    ? {
+        initial: { opacity: 0, y: 28 } as const,
+        whileInView: { opacity: 1, y: 0 } as const,
+        viewport: { once: true, amount: 0.2, margin: '-48px' } as const,
+        transition: {
+          duration: motionDuration.md,
+          ease: motionEase.out,
+          delay: index * 0.08,
+        },
+      }
+    : {};
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2, margin: '-48px' }}
-      transition={{
-        duration: motionDuration.md,
-        ease: motionEase.out,
-        delay: index * 0.08,
-      }}
       className="h-full"
+      {...entranceProps}
+      whileHover={
+        reduceMotion
+          ? undefined
+          : {
+              y: -5,
+              transition: motionSpring.soft,
+            }
+      }
     >
       <motion.div
         className="h-full will-change-transform"
@@ -71,7 +91,7 @@ export function ProjectCard({
         onMouseMove={reduceMotion ? undefined : handleMove}
         onMouseLeave={reduceMotion ? undefined : handleLeave}
       >
-      <Card className="group flex h-full flex-col overflow-hidden rounded-2xl border-border/60 shadow-card transition-[box-shadow,transform] duration-300 hover:shadow-card-hover">
+      <Card className="glass-surface group flex h-full flex-col overflow-hidden rounded-2xl transition-[box-shadow,transform] duration-300 hover:border-primary/20 hover:shadow-card-hover">
         <div className="relative h-48 overflow-hidden bg-muted/80">
           {project.featured_image ? (
             <motion.div className="absolute inset-0" whileHover={{ scale: 1.06 }} transition={{ duration: 0.5, ease: motionEase.out }}>

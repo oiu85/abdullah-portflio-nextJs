@@ -1,14 +1,15 @@
 import { cn } from '@portfolio/ui';
+import { PageBackdropMotion } from '@/components/page-backdrop-motion';
 
 type PageShellProps = {
   children: React.ReactNode;
   className?: string;
-  /** Subtle editorial grid behind content (low opacity). */
+  /** Subtle editorial grid behind content (low opacity) + scroll parallax. */
   showGrid?: boolean;
 };
 
 /**
- * Shared page wrapper: top hairline, section rhythm, optional grid texture.
+ * Shared page wrapper: top hairline, section rhythm, optional animated grid texture.
  */
 export function PageShell({ children, className, showGrid = true }: PageShellProps) {
   return (
@@ -17,12 +18,13 @@ export function PageShell({ children, className, showGrid = true }: PageShellPro
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent"
         aria-hidden
       />
-      {showGrid ? (
-        <div
-          className="pointer-events-none absolute inset-0 -z-10 bg-grid-fade bg-grid opacity-[0.07] dark:opacity-[0.05]"
-          aria-hidden
-        />
-      ) : null}
+      <div
+        className="pointer-events-none absolute inset-0 -z-[11] overflow-hidden"
+        aria-hidden
+      >
+        <div className="liquid-glass-layer" />
+      </div>
+      {showGrid ? <PageBackdropMotion /> : null}
       {children}
     </div>
   );

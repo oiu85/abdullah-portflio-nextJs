@@ -71,7 +71,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
 
         {projects.length === 0 ? (
           <Reveal>
-            <Card className="mx-auto max-w-lg border-dashed border-border/70 bg-muted/25 shadow-card">
+            <Card className="glass-surface-soft mx-auto max-w-lg border-dashed border-border/60">
               <CardContent className="space-y-4 py-10 px-6 text-center">
                 <p className="text-muted-foreground">
                   No featured projects are highlighted yet. Browse the full list for case studies and
@@ -89,7 +89,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
         ) : (
           <div className="relative px-10 sm:px-12 md:px-14">
             <div
-              className="overflow-hidden rounded-2xl ring-1 ring-border/45 shadow-card"
+              className="glass-surface-strong overflow-hidden rounded-2xl ring-1 ring-border/35"
               role="region"
               aria-roledescription="carousel"
               aria-label="Featured projects"
@@ -117,7 +117,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                   variant="secondary"
                   size="icon"
                   className={cn(
-                    'absolute left-1 top-1/2 z-10 h-11 w-11 -translate-y-1/2 rounded-full border border-border/60 bg-background/90 shadow-card backdrop-blur-md transition-shadow hover:shadow-card-hover sm:left-2 md:-left-1 lg:-left-2',
+                    'glass-chip absolute left-1 top-1/2 z-10 h-11 w-11 -translate-y-1/2 rounded-full transition-shadow hover:shadow-card-hover sm:left-2 md:-left-1 lg:-left-2',
                     !canPrev && 'pointer-events-none opacity-40'
                   )}
                   onClick={scrollPrev}
@@ -131,7 +131,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                   variant="secondary"
                   size="icon"
                   className={cn(
-                    'absolute right-1 top-1/2 z-10 h-11 w-11 -translate-y-1/2 rounded-full border border-border/60 bg-background/90 shadow-card backdrop-blur-md transition-shadow hover:shadow-card-hover sm:right-2 md:-right-1 lg:-right-2',
+                    'glass-chip absolute right-1 top-1/2 z-10 h-11 w-11 -translate-y-1/2 rounded-full transition-shadow hover:shadow-card-hover sm:right-2 md:-right-1 lg:-right-2',
                     !canNext && 'pointer-events-none opacity-40'
                   )}
                   onClick={scrollNext}

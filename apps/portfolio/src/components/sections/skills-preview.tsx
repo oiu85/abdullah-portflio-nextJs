@@ -17,7 +17,7 @@ interface SkillsPreviewProps {
 function SkillChip({ skill }: { skill: Skill }) {
   return (
     <span
-      className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border/60 bg-card/90 px-3 py-1.5 text-xs font-medium text-foreground shadow-sm backdrop-blur-sm transition-[border-color,box-shadow] hover:border-primary/25 hover:shadow-md sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm"
+      className="glass-chip inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-foreground transition-[border-color,box-shadow] hover:border-primary/30 hover:shadow-md sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm"
     >
       <SkillIcon icon={skill.icon} name={skill.name} size="sm" transparent />
       {skill.name}
@@ -88,7 +88,7 @@ export function SkillsPreview({ skills }: SkillsPreviewProps) {
 
       <div className="container relative mx-auto mt-4 px-4 sm:px-6 lg:px-8">
         <div
-          className="skills-marquee-section relative overflow-hidden rounded-2xl border border-border/60 bg-card/50 p-3 shadow-card backdrop-blur-sm sm:p-4 dark:bg-card/40"
+          className="skills-marquee-section glass-surface relative overflow-hidden rounded-2xl p-3 sm:p-4"
         >
           <div
             className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-card to-transparent sm:w-12 md:w-16"

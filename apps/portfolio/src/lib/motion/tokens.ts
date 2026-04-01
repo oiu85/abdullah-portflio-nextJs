@@ -23,9 +23,14 @@ export const motionSpring = {
   soft: { type: 'spring' as const, stiffness: 280, damping: 32 },
 } as const;
 
-/** Default viewport for whileInView — slight lead, fire once. */
+/**
+ * Default viewport for whileInView — fire once as soon as any pixel intersects.
+ * Avoid `amount` fractions on tall sections (e.g. multi-row grids): 25% of a
+ * long grid can stay off-screen while the first row is visible, so content
+ * never animates in until the user scrolls.
+ */
 export const defaultViewport = {
   once: true,
-  amount: 0.25,
-  margin: '-64px 0px -64px 0px',
+  amount: 'some' as const,
+  margin: '0px',
 } as const;

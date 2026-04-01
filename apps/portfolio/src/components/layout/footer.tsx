@@ -26,7 +26,7 @@ export function Footer() {
   const [copied, setCopied] = useState(false);
 
   return (
-    <footer className="relative border-t border-border/50 bg-muted/25">
+    <footer className="glass-footer relative">
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"
         aria-hidden

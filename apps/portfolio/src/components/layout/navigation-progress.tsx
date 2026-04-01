@@ -59,7 +59,7 @@ export function NavigationProgress() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="pointer-events-none fixed inset-x-0 top-0 z-[99] h-12 bg-gradient-to-b from-background/90 to-transparent backdrop-blur-[2px]"
+            className="pointer-events-none fixed inset-x-0 top-0 z-[99] h-12 border-b border-border/25 bg-gradient-to-b from-background/55 to-transparent backdrop-blur-xl backdrop-saturate-150"
             aria-hidden
           />
         )}
