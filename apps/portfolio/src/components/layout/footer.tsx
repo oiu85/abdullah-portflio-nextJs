@@ -27,10 +27,10 @@ export function Footer() {
 
   return (
     <footer className="border-t bg-muted/30">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
           {/* Brand */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Link href="/" className="text-xl font-bold tracking-tight">
               AA<span className="text-primary">.</span>
             </Link>
@@ -40,9 +40,9 @@ export function Footer() {
           </div>
 
           {/* Links */}
-          <div className="space-y-4">
-            <h4 className="font-semibold">Quick Links</h4>
-            <nav className="flex flex-col gap-2">
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold">Quick Links</h4>
+            <nav className="flex flex-col gap-1.5">
               {footerLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -56,9 +56,9 @@ export function Footer() {
           </div>
 
           {/* Social */}
-          <div className="space-y-4">
-            <h4 className="font-semibold">Connect</h4>
-            <div className="flex flex-col gap-4">
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold">Connect</h4>
+            <div className="flex flex-col gap-3">
               <div className="flex gap-4">
                 {socialLinks.map((social) => {
                   const isMailto = social.href.startsWith('mailto:');
@@ -156,7 +156,7 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
+        <div className="mt-6 border-t pt-5 text-center text-sm text-muted-foreground">
           <p>&copy; {currentYear} Abdullah Alatrash. All rights reserved.</p>
         </div>
       </div>

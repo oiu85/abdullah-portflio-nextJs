@@ -3,10 +3,15 @@ import { Mail, MapPin, Phone } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@portfolio/ui';
 import { getProfile } from '@/lib/data';
 import { ContactForm } from '@/components/contact-form';
+import {
+  CONTACT_HERO_IMAGE,
+  ContactHeroImage,
+} from '@/components/contact-hero-image';
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: 'Get in touch with Abdullah Alatrash for Flutter development opportunities, collaborations, or just to say hello.',
+  description:
+    'Get in touch with Abdullah Alatrash for Flutter development opportunities, collaborations, or just to say hello.',
 };
 
 export const revalidate = 3600;
@@ -14,31 +19,41 @@ export const revalidate = 3600;
 export default async function ContactPage() {
   const profile = await getProfile();
 
-  return (
-    <div className="pt-24 pb-16">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Get in Touch</h1>
-          <p className="text-xl text-muted-foreground">
-            Have a project in mind or just want to say hello? I&apos;d love to hear from you.
-          </p>
-        </div>
+  const contactHeroAlt = profile?.full_name
+    ? `Contact ${profile.full_name} — available for freelance or collaboration`
+    : 'Contact me — available for freelance or collaboration';
 
-        <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
-          {/* Contact Info */}
-          <div className="md:col-span-1 space-y-4">
+  return (
+    <div className="relative overflow-x-hidden pb-0 pt-0">
+      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Title row: heading left, hero art right (same band as reference — no extra panel) */}
+        <section className="relative mx-auto mb-12 max-w-6xl lg:mb-14">
+          <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+            <div className="relative z-10 w-full max-w-2xl text-center lg:max-w-xl lg:text-left">
+              <h1 className="mb-4 text-4xl font-bold md:text-5xl">Get in Touch</h1>
+              <p className="text-xl text-muted-foreground">
+                Have a project in mind or just want to say hello? I&apos;d love to hear from you.
+              </p>
+            </div>
+            <div className="relative z-0 flex w-full shrink-0 justify-center lg:w-auto lg:justify-end">
+              <ContactHeroImage src={CONTACT_HERO_IMAGE} alt={contactHeroAlt} />
+            </div>
+          </div>
+        </section>
+
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-10 lg:grid-cols-3 lg:gap-12">
+          <div className="space-y-4 lg:col-span-1">
             {profile?.email && (
               <Card>
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
+                <CardContent className="flex items-center gap-3 p-4">
+                  <div className="rounded-lg bg-primary/10 p-2">
                     <Mail className="h-5 w-5 text-primary" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm text-muted-foreground">Email</p>
                     <a
                       href={`mailto:${profile.email}`}
-                      className="font-medium hover:text-primary transition-colors"
+                      className="font-medium transition-colors hover:text-primary"
                     >
                       {profile.email}
                     </a>
@@ -49,15 +64,15 @@ export default async function ContactPage() {
 
             {profile?.phone && (
               <Card>
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
+                <CardContent className="flex items-center gap-3 p-4">
+                  <div className="rounded-lg bg-primary/10 p-2">
                     <Phone className="h-5 w-5 text-primary" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm text-muted-foreground">Phone</p>
                     <a
                       href={`tel:${profile.phone}`}
-                      className="font-medium hover:text-primary transition-colors"
+                      className="font-medium transition-colors hover:text-primary"
                     >
                       {profile.phone}
                     </a>
@@ -68,11 +83,11 @@ export default async function ContactPage() {
 
             {profile?.location && (
               <Card>
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
+                <CardContent className="flex items-center gap-3 p-4">
+                  <div className="rounded-lg bg-primary/10 p-2">
                     <MapPin className="h-5 w-5 text-primary" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm text-muted-foreground">Location</p>
                     <p className="font-medium">{profile.location}</p>
                   </div>
@@ -81,8 +96,7 @@ export default async function ContactPage() {
             )}
           </div>
 
-          {/* Contact Form */}
-          <div className="md:col-span-2">
+          <div className="lg:col-span-2">
             <Card>
               <CardHeader>
                 <CardTitle>Send a Message</CardTitle>
