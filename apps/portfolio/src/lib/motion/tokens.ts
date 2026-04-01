@@ -17,6 +17,12 @@ export const motionDuration = {
   xl: 0.85,
 } as const;
 
+/** Snappy springs for buttons and small UI affordances. */
+export const motionSpring = {
+  snappy: { type: 'spring' as const, stiffness: 420, damping: 28 },
+  soft: { type: 'spring' as const, stiffness: 280, damping: 32 },
+} as const;
+
 /** Default viewport for whileInView — slight lead, fire once. */
 export const defaultViewport = {
   once: true,

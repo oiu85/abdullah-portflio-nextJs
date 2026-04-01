@@ -13,7 +13,7 @@ type ContactHeroImageProps = {
  */
 export function ContactHeroImage({ src, alt }: ContactHeroImageProps) {
   return (
-    <div className="pointer-events-none w-full max-w-[min(100%,420px)] select-none lg:max-w-[min(420px,44vw)]">
+    <div className="contact-hero-float pointer-events-none w-full max-w-[min(100%,420px)] select-none lg:max-w-[min(420px,44vw)]">
       <Image
         src={src}
         alt={alt}

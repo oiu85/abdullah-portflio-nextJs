@@ -24,15 +24,21 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <motion.div
-      className={cn('mb-16 text-center', className)}
+      className={cn('mb-14 text-center md:mb-16', className)}
       initial="hidden"
       whileInView="visible"
       viewport={defaultViewport}
       variants={sectionHeaderContainer}
     >
+      <div
+        className="mx-auto mb-5 flex justify-center"
+        aria-hidden
+      >
+        <span className="h-px w-12 bg-gradient-to-r from-transparent via-primary/50 to-transparent md:w-16" />
+      </div>
       <motion.h2
         variants={sectionHeaderTitle}
-        className="mb-4 text-3xl font-bold md:text-4xl"
+        className="mb-4 text-balance text-3xl font-semibold tracking-display md:text-4xl lg:text-[2.5rem] lg:leading-[1.15]"
       >
         {title}
       </motion.h2>
@@ -40,7 +46,7 @@ export function SectionHeader({
         <motion.p
           variants={sectionHeaderSubtitle}
           className={cn(
-            'mx-auto max-w-2xl text-lg text-muted-foreground',
+            'mx-auto max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg',
             subtitleClassName
           )}
         >

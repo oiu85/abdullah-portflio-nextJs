@@ -71,8 +71,8 @@ export function ProjectCard({
         onMouseMove={reduceMotion ? undefined : handleMove}
         onMouseLeave={reduceMotion ? undefined : handleLeave}
       >
-      <Card className="group flex h-full flex-col overflow-hidden border-border/80 shadow-sm transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/5">
-        <div className="relative h-48 overflow-hidden bg-muted">
+      <Card className="group flex h-full flex-col overflow-hidden rounded-2xl border-border/60 shadow-card transition-[box-shadow,transform] duration-300 hover:shadow-card-hover">
+        <div className="relative h-48 overflow-hidden bg-muted/80">
           {project.featured_image ? (
             <motion.div className="absolute inset-0" whileHover={{ scale: 1.06 }} transition={{ duration: 0.5, ease: motionEase.out }}>
               <Image

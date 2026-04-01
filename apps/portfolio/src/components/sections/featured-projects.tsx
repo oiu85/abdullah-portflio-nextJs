@@ -12,12 +12,15 @@ import { SectionHeader } from '@/components/section-header';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Reveal } from '@/components/motion/reveal';
 import { motionDuration, motionEase } from '@/lib/motion';
+import { useAccessibleMotionScale } from '@/hooks/use-accessible-motion-scale';
 
 interface FeaturedProjectsProps {
   projects: Project[];
 }
 
 export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
+  const ctaMotion = useAccessibleMotionScale();
+
   const emblaOptions = useMemo(
     () => ({
       align: 'start' as const,
@@ -57,9 +60,9 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   return (
     <section
       id="home-work"
-      className="relative scroll-mt-20 bg-background py-24"
+      className="relative scroll-mt-20 bg-background py-section"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="Featured Projects"
@@ -68,7 +71,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
 
         {projects.length === 0 ? (
           <Reveal>
-            <Card className="mx-auto max-w-lg border-dashed bg-muted/30">
+            <Card className="mx-auto max-w-lg border-dashed border-border/70 bg-muted/25 shadow-card">
               <CardContent className="space-y-4 py-10 px-6 text-center">
                 <p className="text-muted-foreground">
                   No featured projects are highlighted yet. Browse the full list for case studies and
@@ -86,7 +89,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
         ) : (
           <div className="relative px-10 sm:px-12 md:px-14">
             <div
-              className="overflow-hidden rounded-xl"
+              className="overflow-hidden rounded-2xl ring-1 ring-border/45 shadow-card"
               role="region"
               aria-roledescription="carousel"
               aria-label="Featured projects"
@@ -114,7 +117,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                   variant="secondary"
                   size="icon"
                   className={cn(
-                    'absolute left-1 top-1/2 z-10 h-11 w-11 -translate-y-1/2 rounded-full border border-border/80 bg-background/95 shadow-md backdrop-blur-sm hover:bg-background sm:left-2 md:-left-1 lg:-left-2',
+                    'absolute left-1 top-1/2 z-10 h-11 w-11 -translate-y-1/2 rounded-full border border-border/60 bg-background/90 shadow-card backdrop-blur-md transition-shadow hover:shadow-card-hover sm:left-2 md:-left-1 lg:-left-2',
                     !canPrev && 'pointer-events-none opacity-40'
                   )}
                   onClick={scrollPrev}
@@ -128,7 +131,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                   variant="secondary"
                   size="icon"
                   className={cn(
-                    'absolute right-1 top-1/2 z-10 h-11 w-11 -translate-y-1/2 rounded-full border border-border/80 bg-background/95 shadow-md backdrop-blur-sm hover:bg-background sm:right-2 md:-right-1 lg:-right-2',
+                    'absolute right-1 top-1/2 z-10 h-11 w-11 -translate-y-1/2 rounded-full border border-border/60 bg-background/90 shadow-card backdrop-blur-md transition-shadow hover:shadow-card-hover sm:right-2 md:-right-1 lg:-right-2',
                     !canNext && 'pointer-events-none opacity-40'
                   )}
                   onClick={scrollNext}
@@ -148,10 +151,10 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                       type="button"
                       onClick={() => emblaApi?.scrollTo(i)}
                       className={cn(
-                        'h-2.5 min-w-2.5 rounded-full transition-all',
+                        'h-2 min-w-2 rounded-full transition-all duration-300',
                         selectedIndex === i
-                          ? 'w-6 bg-primary'
-                          : 'w-2.5 bg-muted-foreground/35 hover:bg-muted-foreground/55'
+                          ? 'w-7 bg-foreground shadow-sm'
+                          : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50'
                       )}
                       aria-label={`Go to slide ${i + 1}`}
                       aria-current={selectedIndex === i}
@@ -171,7 +174,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             transition={{ duration: motionDuration.md, ease: motionEase.out, delay: 0.12 }}
             className="mt-12 text-center"
           >
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <motion.div {...ctaMotion}>
               <Button variant="outline" size="lg" asChild>
                 <Link href="/projects">
                   View All Projects

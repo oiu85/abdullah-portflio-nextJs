@@ -1,14 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle } from 'lucide-react';
 import { Button, Input, Textarea, Label } from '@portfolio/ui';
 import { createClient } from '@/lib/supabase/client';
+import { motionDuration, motionEase } from '@/lib/motion';
+import { useAccessibleMotionScale } from '@/hooks/use-accessible-motion-scale';
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const submitMotion = useAccessibleMotionScale({ hover: 1.01, tap: 0.99 });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,80 +45,111 @@ export function ContactForm() {
     }
   };
 
-  if (isSuccess) {
-    return (
-      <div className="text-center py-8">
-        <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold mb-2">Message Sent!</h3>
-        <p className="text-muted-foreground mb-4">
-          Thank you for reaching out. I&apos;ll get back to you as soon as possible.
-        </p>
-        <Button variant="outline" onClick={() => setIsSuccess(false)}>
-          Send Another Message
-        </Button>
-      </div>
-    );
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            name="name"
-            placeholder="Your name"
-            required
-            disabled={isSubmitting}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="your@email.com"
-            required
-            disabled={isSubmitting}
-          />
-        </div>
-      </div>
+    <AnimatePresence mode="wait">
+      {isSuccess ? (
+        <motion.div
+          key="success"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: motionDuration.md, ease: motionEase.out }}
+          className="py-6 text-center"
+        >
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-500/25 bg-emerald-500/10 shadow-inner">
+            <CheckCircle className="h-9 w-9 text-emerald-600 dark:text-emerald-400" />
+          </div>
+          <h3 className="mb-2 text-xl font-semibold tracking-tight">Message sent</h3>
+          <p className="mb-6 text-muted-foreground">
+            Thank you for reaching out. I&apos;ll get back to you as soon as possible.
+          </p>
+          <motion.div {...submitMotion} className="inline-block">
+            <Button variant="outline" onClick={() => setIsSuccess(false)}>
+              Send another message
+            </Button>
+          </motion.div>
+        </motion.div>
+      ) : (
+        <motion.form
+          key="form"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: motionDuration.sm }}
+          onSubmit={handleSubmit}
+          className="space-y-6"
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                name="name"
+                placeholder="Your name"
+                required
+                disabled={isSubmitting}
+                className="border-border/60 bg-background/50 transition-shadow focus-visible:ring-2 focus-visible:ring-ring"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="your@email.com"
+                required
+                disabled={isSubmitting}
+                className="border-border/60 bg-background/50 transition-shadow focus-visible:ring-2 focus-visible:ring-ring"
+              />
+            </div>
+          </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="subject">Subject</Label>
-        <Input
-          id="subject"
-          name="subject"
-          placeholder="What's this about?"
-          required
-          disabled={isSubmitting}
-        />
-      </div>
+          <div className="space-y-2">
+            <Label htmlFor="subject">Subject</Label>
+            <Input
+              id="subject"
+              name="subject"
+              placeholder="What is this about?"
+              required
+              disabled={isSubmitting}
+              className="border-border/60 bg-background/50 transition-shadow focus-visible:ring-2 focus-visible:ring-ring"
+            />
+          </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="message">Message</Label>
-        <Textarea
-          id="message"
-          name="message"
-          placeholder="Your message..."
-          className="min-h-[150px]"
-          required
-          disabled={isSubmitting}
-        />
-      </div>
+          <div className="space-y-2">
+            <Label htmlFor="message">Message</Label>
+            <Textarea
+              id="message"
+              name="message"
+              placeholder="Your message..."
+              className="min-h-[150px] border-border/60 bg-background/50 transition-shadow focus-visible:ring-2 focus-visible:ring-ring"
+              required
+              disabled={isSubmitting}
+            />
+          </div>
 
-      {error && (
-        <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
-          {error}
-        </div>
+          {error ? (
+            <div
+              role="alert"
+              className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+            >
+              {error}
+            </div>
+          ) : null}
+
+          <motion.div {...submitMotion} className="w-full">
+            <Button
+              type="submit"
+              className="w-full shadow-card transition-shadow hover:shadow-card-hover"
+              isLoading={isSubmitting}
+            >
+              <Send className="mr-2 h-4 w-4" />
+              Send Message
+            </Button>
+          </motion.div>
+        </motion.form>
       )}
-
-      <Button type="submit" className="w-full" isLoading={isSubmitting}>
-        <Send className="mr-2 h-4 w-4" />
-        Send Message
-      </Button>
-    </form>
+    </AnimatePresence>
   );
 }

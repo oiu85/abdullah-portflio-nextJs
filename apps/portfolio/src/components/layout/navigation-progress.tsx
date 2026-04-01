@@ -48,7 +48,7 @@ export function NavigationProgress() {
   return (
     <>
       <motion.div
-        className="fixed left-0 right-0 top-0 z-[100] h-[2px] origin-left bg-primary/90"
+        className="fixed left-0 right-0 top-0 z-[100] h-[2px] origin-left bg-gradient-to-r from-primary/80 via-primary to-primary/80"
         style={{ scaleX }}
         aria-hidden
       />

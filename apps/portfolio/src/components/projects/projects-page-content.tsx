@@ -1,9 +1,11 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { Card, CardContent } from '@portfolio/ui';
 import type { Project } from '@portfolio/types';
 import { ProjectCard } from '@/components/projects/project-card';
-import { motionDuration, motionEase } from '@/lib/motion';
+import { PageShell } from '@/components/page-shell';
+import { PageHeader } from '@/components/page-header';
+import { Reveal } from '@/components/motion/reveal';
 
 type ProjectsPageContentProps = {
   projects: Project[];
@@ -11,20 +13,13 @@ type ProjectsPageContentProps = {
 
 export function ProjectsPageContent({ projects }: ProjectsPageContentProps) {
   return (
-    <div className="pb-16 pt-24">
+    <PageShell>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.header
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: motionDuration.md, ease: motionEase.out }}
-          className="mx-auto mb-16 max-w-3xl text-center"
-        >
-          <h1 className="mb-6 text-4xl font-bold md:text-5xl">Projects</h1>
-          <p className="text-xl text-muted-foreground">
-            A collection of Flutter and mobile development projects I&apos;ve worked on, from
-            personal experiments to production applications.
-          </p>
-        </motion.header>
+        <PageHeader
+          eyebrow="Work"
+          title="Projects"
+          description="A collection of Flutter and mobile development projects I've worked on, from personal experiments to production applications."
+        />
 
         {projects.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -38,11 +33,15 @@ export function ProjectsPageContent({ projects }: ProjectsPageContentProps) {
             ))}
           </div>
         ) : (
-          <div className="py-16 text-center">
-            <p className="text-muted-foreground">No projects found.</p>
-          </div>
+          <Reveal>
+            <Card className="mx-auto max-w-lg border-dashed border-border/70 bg-muted/25 shadow-card">
+              <CardContent className="py-12 px-6 text-center">
+                <p className="text-muted-foreground">No projects found.</p>
+              </CardContent>
+            </Card>
+          </Reveal>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }

@@ -6,7 +6,7 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@portfolio/ui';
 import { Button } from '@portfolio/ui';
 import { cn } from '@portfolio/ui';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { motionDuration, motionEase } from '@/lib/motion';
 
 interface ImageLightboxProps {
@@ -24,6 +24,7 @@ export function ImageLightbox({
   onClose,
   alt = 'Image',
 }: ImageLightboxProps) {
+  const reduceMotion = useReducedMotion();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
   useEffect(() => {
@@ -67,17 +68,25 @@ export function ImageLightbox({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="max-h-[95vh] w-full max-w-7xl border-0 bg-transparent p-0 [&>button]:hidden [&>div]:bg-black/95"
+        className="max-h-[95vh] w-full max-w-7xl border-0 bg-transparent p-0 shadow-none [&>button]:hidden [&>div]:bg-black/88 [&>div]:backdrop-blur-md"
         onInteractOutside={onClose}
       >
         <DialogTitle className="sr-only">
           Image Lightbox - {alt} {currentIndex + 1} of {images.length}
         </DialogTitle>
-        <div className="relative flex h-full w-full items-center justify-center">
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: motionDuration.sm,
+            ease: motionEase.out,
+          }}
+          className="relative flex h-full w-full items-center justify-center"
+        >
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-4 top-4 z-50 bg-background/80 text-foreground hover:bg-background"
+            className="absolute right-4 top-4 z-50 rounded-full border border-border/40 bg-background/85 text-foreground shadow-card backdrop-blur-md transition-shadow hover:bg-background hover:shadow-card-hover"
             onClick={onClose}
             aria-label="Close"
           >
@@ -88,7 +97,7 @@ export function ImageLightbox({
             <Button
               variant="ghost"
               size="icon"
-              className="absolute left-4 top-1/2 z-50 -translate-y-1/2 bg-background/80 text-foreground hover:bg-background"
+              className="absolute left-4 top-1/2 z-50 -translate-y-1/2 rounded-full border border-border/40 bg-background/85 text-foreground shadow-card backdrop-blur-md hover:bg-background hover:shadow-card-hover"
               onClick={handlePrevious}
               aria-label="Previous image"
             >
@@ -100,7 +109,7 @@ export function ImageLightbox({
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-4 top-1/2 z-50 -translate-y-1/2 bg-background/80 text-foreground hover:bg-background"
+              className="absolute right-4 top-1/2 z-50 -translate-y-1/2 rounded-full border border-border/40 bg-background/85 text-foreground shadow-card backdrop-blur-md hover:bg-background hover:shadow-card-hover"
               onClick={handleNext}
               aria-label="Next image"
             >
@@ -134,7 +143,7 @@ export function ImageLightbox({
           </div>
 
           {images.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full bg-background/80 px-4 py-2 text-sm text-foreground">
+            <div className="absolute bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full border border-border/40 bg-background/85 px-4 py-2 text-sm text-foreground shadow-card backdrop-blur-md">
               {currentIndex + 1} / {images.length}
             </div>
           )}
@@ -165,7 +174,7 @@ export function ImageLightbox({
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
       </DialogContent>
     </Dialog>
   );

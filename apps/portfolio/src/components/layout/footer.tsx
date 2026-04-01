@@ -26,28 +26,41 @@ export function Footer() {
   const [copied, setCopied] = useState(false);
 
   return (
-    <footer className="border-t bg-muted/30">
-      <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+    <footer className="relative border-t border-border/50 bg-muted/25">
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"
+        aria-hidden
+      />
+      <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-12">
           {/* Brand */}
-          <div className="space-y-3">
-            <Link href="/" className="text-xl font-bold tracking-tight">
-              AA<span className="text-primary">.</span>
+          <div className="space-y-4">
+            <Link
+              href="/"
+              className="inline-flex items-baseline gap-1 text-lg font-semibold tracking-tight transition-colors hover:text-primary"
+            >
+              AA
+              <span
+                className="inline-block h-1.5 w-1.5 rounded-full bg-primary"
+                aria-hidden
+              />
             </Link>
-            <p className="text-sm text-muted-foreground max-w-xs">
+            <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
               Senior Mobile Developer specialized in building high-performance Flutter applications.
             </p>
           </div>
 
           {/* Links */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold">Quick Links</h4>
-            <nav className="flex flex-col gap-1.5">
+          <div className="space-y-4">
+            <h4 className="text-xs font-semibold uppercase tracking-eyebrow text-muted-foreground">
+              Quick Links
+            </h4>
+            <nav className="flex flex-col gap-2">
               {footerLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {link.label}
                 </Link>
@@ -56,8 +69,10 @@ export function Footer() {
           </div>
 
           {/* Social */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold">Connect</h4>
+          <div className="space-y-4">
+            <h4 className="text-xs font-semibold uppercase tracking-eyebrow text-muted-foreground">
+              Connect
+            </h4>
             <div className="flex flex-col gap-3">
               <div className="flex gap-4">
                 {socialLinks.map((social) => {
@@ -69,7 +84,7 @@ export function Footer() {
                         key={social.label}
                         type="button"
                         onClick={() => setShowEmailCopy(!showEmailCopy)}
-                        className="inline-flex items-center justify-center p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                        className="inline-flex cursor-pointer items-center justify-center rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                         aria-label={social.label}
                         title={social.label}
                       >
@@ -84,7 +99,7 @@ export function Footer() {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+                      className="inline-flex cursor-pointer items-center justify-center rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                       aria-label={social.label}
                       title={social.label}
                     >
@@ -156,7 +171,7 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="mt-6 border-t pt-5 text-center text-sm text-muted-foreground">
+        <div className="mt-10 border-t border-border/50 pt-8 text-center text-sm text-muted-foreground">
           <p>&copy; {currentYear} Abdullah Alatrash. All rights reserved.</p>
         </div>
       </div>

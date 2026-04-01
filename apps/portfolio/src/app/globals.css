@@ -7,48 +7,103 @@
     /* Self-hosted via @fontsource (no Google Fonts network fetch at dev/build time) */
     --font-inter: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+
+    /* Layout & type scale — premium spacing rhythm */
+    --section-y: clamp(4.5rem, 8vw, 7.5rem);
+    --section-y-tight: clamp(3rem, 5vw, 4.5rem);
+    --container-padding-x: clamp(1rem, 4vw, 2rem);
+    --display-tracking: -0.04em;
+    --eyebrow-tracking: 0.22em;
+
+    /* Refined light: warm paper, ink, single accent */
+    --background: 40 20% 99%;
+    --foreground: 224 47% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 224 47% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 224 47% 8%;
+    --primary: 224 47% 12%;
+    --primary-foreground: 40 25% 98%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 224 47% 12%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 42%;
+    --accent: 220 14% 94%;
+    --accent-foreground: 224 47% 12%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 224 47% 12%;
+    --radius: 0.75rem;
+
+    /* Elevation & chrome */
+    --shadow-card:
+      0 1px 0 hsl(var(--border) / 0.6),
+      0 12px 40px -24px hsl(var(--foreground) / 0.12);
+    --shadow-card-hover:
+      0 1px 0 hsl(var(--border) / 0.5),
+      0 24px 48px -28px hsl(var(--foreground) / 0.18);
+    --gradient-mesh:
+      radial-gradient(
+        900px 520px at 12% -8%,
+        hsl(var(--primary) / 0.07),
+        transparent 62%
+      ),
+      radial-gradient(
+        720px 480px at 88% 8%,
+        hsl(220 60% 50% / 0.06),
+        transparent 58%
+      ),
+      radial-gradient(
+        560px 400px at 50% 100%,
+        hsl(var(--muted-foreground) / 0.05),
+        transparent 55%
+      );
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --background: 224 24% 6%;
+    --foreground: 40 20% 96%;
+    --card: 224 22% 8%;
+    --card-foreground: 40 20% 96%;
+    --popover: 224 22% 8%;
+    --popover-foreground: 40 20% 96%;
+    --primary: 40 20% 96%;
+    --primary-foreground: 224 47% 10%;
+    --secondary: 224 18% 14%;
+    --secondary-foreground: 40 20% 96%;
+    --muted: 224 18% 14%;
+    --muted-foreground: 220 12% 64%;
+    --accent: 224 18% 12%;
+    --accent-foreground: 40 20% 96%;
+    --destructive: 0 62.8% 45%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 224 16% 16%;
+    --input: 224 16% 16%;
+    --ring: 220 14% 78%;
+    --shadow-card:
+      0 1px 0 hsl(var(--border) / 0.5),
+      0 18px 48px -28px hsl(0 0% 0% / 0.55);
+    --shadow-card-hover:
+      0 1px 0 hsl(var(--border) / 0.45),
+      0 28px 56px -24px hsl(0 0% 0% / 0.65);
+    --gradient-mesh:
+      radial-gradient(
+        880px 520px at 8% -6%,
+        hsl(220 45% 45% / 0.12),
+        transparent 60%
+      ),
+      radial-gradient(
+        640px 420px at 92% 12%,
+        hsl(var(--primary) / 0.06),
+        transparent 55%
+      ),
+      radial-gradient(
+        520px 360px at 48% 100%,
+        hsl(220 30% 40% / 0.08),
+        transparent 52%
+      );
   }
 }
 
@@ -57,8 +112,11 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply text-foreground;
+    background-color: hsl(var(--background));
+    background-image: var(--gradient-mesh);
+    background-attachment: fixed;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
   }
 }
 
@@ -87,7 +145,28 @@ html {
 
 /* Selection */
 ::selection {
-  @apply bg-primary text-primary-foreground;
+  @apply bg-primary/90 text-primary-foreground;
+}
+
+/* Contact hero art — gentle float (respect reduced motion below) */
+@keyframes contact-hero-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+.contact-hero-float {
+  animation: contact-hero-float 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-hero-float {
+    animation: none;
+  }
 }
 
 /* Skills marquee — translate -50% matches duplicated track width */

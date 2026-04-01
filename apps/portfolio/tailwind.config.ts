@@ -9,6 +9,25 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      spacing: {
+        section: 'var(--section-y)',
+        'section-tight': 'var(--section-y-tight)',
+      },
+      letterSpacing: {
+        display: 'var(--display-tracking)',
+        eyebrow: 'var(--eyebrow-tracking)',
+      },
+      backgroundImage: {
+        'grid-fade':
+          'linear-gradient(to right, hsl(var(--border) / 0.35) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--border) / 0.35) 1px, transparent 1px)',
+      },
+      backgroundSize: {
+        grid: '48px 48px',
+      },
+      boxShadow: {
+        card: 'var(--shadow-card)',
+        'card-hover': 'var(--shadow-card-hover)',
+      },
       typography: {
         DEFAULT: {
           css: {
@@ -81,6 +100,7 @@ const config: Config = {
         'fade-in': 'fadeIn 0.5s ease-out',
         'slide-up': 'slideUp 0.5s ease-out',
         'slide-down': 'slideDown 0.3s ease-out',
+        'shimmer-line': 'shimmerLine 2.4s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -94,6 +114,10 @@ const config: Config = {
         slideDown: {
           '0%': { transform: 'translateY(-10px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        shimmerLine: {
+          '0%, 100%': { opacity: '0.35', transform: 'scaleX(0.92)' },
+          '50%': { opacity: '1', transform: 'scaleX(1)' },
         },
       },
     },

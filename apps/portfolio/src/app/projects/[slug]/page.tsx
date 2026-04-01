@@ -7,6 +7,7 @@ import { getProjectBySlug, getAllProjectSlugs } from '@/lib/data';
 import { formatDate } from '@portfolio/lib/utils';
 import { ProjectImages, ProjectImagesProvider } from '@/components/project-images';
 import { SafeHtml } from '@/components/safe-html';
+import { PageShell } from '@/components/page-shell';
 
 interface ProjectPageProps {
   params: { slug: string };
@@ -45,11 +46,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <div className="pt-24 pb-16">
+    <PageShell>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Button */}
         <div className="mb-8">
-          <Button variant="ghost" asChild>
+          <Button
+            variant="ghost"
+            className="-ml-2 rounded-full border border-transparent px-3 transition-colors hover:border-border/60 hover:bg-muted/50"
+            asChild
+          >
             <Link href="/projects">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Projects
@@ -62,28 +67,40 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           galleryImages={project.images}
           projectTitle={project.title}
         >
-          <div className="max-w-4xl mx-auto">
+          <div className="mx-auto max-w-4xl">
             {/* Header */}
-            <div className="mb-8">
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                {project.is_featured && <Badge>Featured</Badge>}
+            <header className="mb-10">
+              <p className="mb-3 text-[0.7rem] font-medium uppercase tracking-eyebrow text-muted-foreground md:text-xs">
+                Case study
+              </p>
+              <div className="mb-6 flex flex-wrap items-center gap-3">
+                {project.is_featured && (
+                  <Badge className="border border-primary/20 shadow-sm">Featured</Badge>
+                )}
                 {project.start_date && (
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
+                  <div className="flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/40 px-3 py-1 text-sm text-muted-foreground backdrop-blur-sm">
+                    <Calendar className="h-4 w-4 shrink-0" />
                     {formatDate(project.start_date, { year: 'numeric', month: 'long' })}
                     {project.end_date &&
-                      ` - ${formatDate(project.end_date, { year: 'numeric', month: 'long' })}`}
+                      ` — ${formatDate(project.end_date, { year: 'numeric', month: 'long' })}`}
                   </div>
                 )}
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">{project.title}</h1>
-              <p className="text-xl text-muted-foreground">{project.short_description}</p>
-            </div>
+              <h1 className="mb-4 text-balance text-4xl font-semibold tracking-display md:text-5xl lg:text-6xl">
+                {project.title}
+              </h1>
+              <p className="text-pretty text-xl leading-relaxed text-muted-foreground">
+                {project.short_description}
+              </p>
+            </header>
 
             {/* Actions — stack and CTAs before deep content */}
-            <div className="flex flex-wrap gap-4 mb-8">
+            <div className="mb-10 flex flex-wrap gap-3">
               {project.live_url && (
-                <Button asChild>
+                <Button
+                  asChild
+                  className="shadow-card transition-shadow hover:shadow-card-hover"
+                >
                   <a href={project.live_url} target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="mr-2 h-4 w-4" />
                     View Live Site
@@ -91,7 +108,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </Button>
               )}
               {project.github_url && (
-                <Button variant="outline" asChild>
+                <Button variant="outline" asChild className="shadow-sm">
                   <a href={project.github_url} target="_blank" rel="noopener noreferrer">
                     <Github className="mr-2 h-4 w-4" />
                     View Source
@@ -101,11 +118,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </div>
 
             {/* Technologies */}
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold mb-3">Technologies Used</h2>
+            <div className="mb-10 rounded-2xl border border-border/50 bg-card/40 p-5 shadow-card backdrop-blur-sm md:p-6">
+              <h2 className="mb-4 text-sm font-semibold uppercase tracking-eyebrow text-muted-foreground">
+                Technologies
+              </h2>
               <div className="flex flex-wrap gap-2">
                 {project.technologies.map((tech) => (
-                  <Badge key={tech} variant="secondary" className="text-sm">
+                  <Badge
+                    key={tech}
+                    variant="secondary"
+                    className="border border-border/50 text-sm font-normal"
+                  >
                     {tech}
                   </Badge>
                 ))}
@@ -120,13 +143,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             />
 
             {/* Description */}
-            <div className="prose prose-neutral dark:prose-invert max-w-none mt-8">
-              <h2>About This Project</h2>
+            <div className="prose prose-neutral mt-10 max-w-none rounded-2xl border border-border/40 bg-card/30 p-6 shadow-sm backdrop-blur-sm dark:prose-invert md:p-8">
+              <h2 className="!mt-0 text-balance font-semibold tracking-tight">
+                About This Project
+              </h2>
               <SafeHtml content={project.description} />
             </div>
           </div>
         </ProjectImagesProvider>
       </div>
-    </div>
+    </PageShell>
   );
 }

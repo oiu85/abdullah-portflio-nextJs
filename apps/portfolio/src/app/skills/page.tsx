@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { getSkillsByCategory } from '@/lib/data';
 import { SkillsDisplay } from '@/components/skills-display';
+import { PageShell } from '@/components/page-shell';
+import { PageHeader } from '@/components/page-header';
 
 export const metadata: Metadata = {
   title: 'Skills',
@@ -28,18 +30,16 @@ export default async function SkillsPage() {
   const sortedCategories = categoryOrder.filter((cat) => skillsByCategory[cat]?.length > 0);
 
   return (
-    <div className="pt-24 pb-16">
+    <PageShell>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Skills & Technologies</h1>
-          <p className="text-xl text-muted-foreground">
-            Technologies and tools I use to build high-performance Flutter applications.
-          </p>
-        </div>
+        <PageHeader
+          eyebrow="Expertise"
+          title="Skills & Technologies"
+          description="Technologies and tools I use to build high-performance Flutter applications."
+        />
 
         {/* Skills by Category */}
-        <div className="max-w-5xl mx-auto space-y-12">
+        <div className="mx-auto max-w-5xl space-y-14">
           {sortedCategories.map((category) => (
             <SkillsDisplay
               key={category}
@@ -50,11 +50,11 @@ export default async function SkillsPage() {
         </div>
 
         {Object.keys(skillsByCategory).length === 0 && (
-          <div className="text-center py-16">
+          <div className="py-16 text-center">
             <p className="text-muted-foreground">No skills found.</p>
           </div>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }

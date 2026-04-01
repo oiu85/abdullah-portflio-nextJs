@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getExperience } from '@/lib/data';
 import { ExperiencePageContent } from '@/components/experience/experience-page-content';
+import { PageShell } from '@/components/page-shell';
 
 export const metadata: Metadata = {
   title: 'Experience',
@@ -14,10 +15,10 @@ export default async function ExperiencePage() {
   const experiences = await getExperience();
 
   return (
-    <div className="pb-16 pt-24">
+    <PageShell>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <ExperiencePageContent experiences={experiences} />
       </div>
-    </div>
+    </PageShell>
   );
 }

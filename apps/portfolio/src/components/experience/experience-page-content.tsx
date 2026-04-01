@@ -7,6 +7,7 @@ import { Badge, Card, CardContent, CardHeader, CardTitle } from '@portfolio/ui';
 import type { Experience } from '@portfolio/types';
 import { formatDateRange } from '@portfolio/lib/utils';
 import { defaultViewport, motionDuration, motionEase } from '@/lib/motion';
+import { PageHeader } from '@/components/page-header';
 
 type ExperiencePageContentProps = {
   experiences: Experience[];
@@ -23,27 +24,17 @@ export function ExperiencePageContent({ experiences }: ExperiencePageContentProp
 
   return (
     <>
-      <motion.div
-        className="mx-auto mb-16 max-w-3xl text-center"
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: reduceMotion ? 0 : motionDuration.md,
-          ease: motionEase.out,
-        }}
-      >
-        <h1 className="mb-6 text-4xl font-bold md:text-5xl">Experience</h1>
-        <p className="text-xl text-muted-foreground">
-          My professional journey as a Senior Mobile Developer specializing in Flutter and clean
-          architecture.
-        </p>
-      </motion.div>
+      <PageHeader
+        eyebrow="Journey"
+        title="Experience"
+        description="My professional journey as a Senior Mobile Developer specializing in Flutter and clean architecture."
+      />
 
       <div className="mx-auto max-w-5xl">
         {experiences.length > 0 ? (
           <div className="relative">
             <div
-              className="absolute bottom-0 left-0 top-0 w-0.5 bg-border md:left-1/2 md:-translate-x-1/2"
+              className="absolute bottom-0 left-0 top-0 w-px bg-gradient-to-b from-transparent via-border to-transparent md:left-1/2 md:-translate-x-1/2"
               aria-hidden
             />
 
@@ -83,7 +74,7 @@ export function ExperiencePageContent({ experiences }: ExperiencePageContentProp
                     viewport={defaultViewport}
                     transition={itemTransition(index)}
                   >
-                    <Card className="w-full">
+                    <Card className="w-full rounded-2xl border-border/60 shadow-card transition-[box-shadow,border-color] hover:border-primary/15 hover:shadow-card-hover">
                       <CardHeader className="pb-4">
                         <div
                           className={`flex gap-4 ${
@@ -184,7 +175,7 @@ export function ExperiencePageContent({ experiences }: ExperiencePageContentProp
             </div>
           </div>
         ) : (
-          <div className="py-16 text-center">
+          <div className="rounded-2xl border border-dashed border-border/70 bg-muted/20 py-16 text-center shadow-card">
             <p className="text-muted-foreground">No experience entries found.</p>
           </div>
         )}

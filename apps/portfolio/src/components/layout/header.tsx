@@ -63,34 +63,47 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed left-0 right-0 top-0 z-50 transition-all duration-300',
+        'fixed left-0 right-0 top-0 z-50 transition-[background,box-shadow,border-color] duration-500 ease-out',
         isScrolled || isMobileMenuOpen
-          ? 'border-b bg-background/80 shadow-sm backdrop-blur-lg'
-          : 'bg-transparent'
+          ? 'border-b border-border/40 bg-background/75 shadow-sm shadow-black/[0.03] backdrop-blur-xl dark:shadow-black/20'
+          : 'border-b border-transparent bg-transparent'
       )}
     >
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link
             href="/"
-            className="text-xl font-bold tracking-tight transition-colors hover:text-primary"
+            className="group text-lg font-semibold tracking-tight transition-colors hover:text-primary"
           >
-            AA<span className="text-primary">.</span>
+            <span className="inline-flex items-baseline gap-0.5">
+              AA
+              <span
+                className="inline-block h-1.5 w-1.5 rounded-full bg-primary transition-transform duration-300 group-hover:scale-125"
+                aria-hidden
+              />
+            </span>
           </Link>
 
-          <div className="hidden items-center gap-1 md:flex">
+          <div className="hidden items-center rounded-full border border-border/50 bg-muted/30 p-1 shadow-sm backdrop-blur-md md:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                  'relative rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors duration-200',
                   isNavActive(item)
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    ? 'text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
-                {item.label}
+                {isNavActive(item) ? (
+                  <motion.span
+                    layoutId="nav-pill"
+                    className="absolute inset-0 rounded-full bg-background shadow-sm ring-1 ring-border/60"
+                    transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+                  />
+                ) : null}
+                <span className="relative z-10">{item.label}</span>
               </Link>
             ))}
           </div>
@@ -136,16 +149,16 @@ export function Header() {
               transition={{ duration: 0.2 }}
               className="overflow-hidden border-t md:hidden"
             >
-              <div className="space-y-1 bg-background/95 py-4 backdrop-blur-lg">
+              <div className="space-y-1 rounded-2xl border border-border/50 bg-background/95 py-3 shadow-card backdrop-blur-lg">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      'block rounded-lg px-3 py-2 text-base font-medium transition-colors',
+                      'block rounded-xl px-4 py-2.5 text-base font-medium transition-colors',
                       isNavActive(item)
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                        ? 'bg-muted/80 text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
                     )}
                   >
                     {item.label}

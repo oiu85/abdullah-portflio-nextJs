@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, Mail, Phone, Download, Calendar } from 'lucide-react';
+import { MapPin, Mail, Download, Calendar } from 'lucide-react';
 import { Button, Badge, Card, CardContent } from '@portfolio/ui';
 import { getProfile, getExperience } from '@/lib/data';
 import { formatDateRange } from '@portfolio/lib/utils';
+import { PageShell } from '@/components/page-shell';
+import { PageHeader } from '@/components/page-header';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -17,24 +19,24 @@ export default async function AboutPage() {
   const [profile, experiences] = await Promise.all([getProfile(), getExperience()]);
 
   return (
-    <div className="pt-24 pb-16">
+    <PageShell>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">About Me</h1>
-          <p className="text-xl text-muted-foreground">
-            Get to know the person behind the code
-          </p>
-        </div>
+        <PageHeader
+          eyebrow="Profile"
+          title="About Me"
+          description="Get to know the person behind the code"
+          maxWidthClassName="max-w-4xl"
+        />
 
         {/* Profile Section */}
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-16 grid gap-8 md:grid-cols-3">
             {/* Avatar & Quick Info */}
             <div className="md:col-span-1">
               <div className="sticky top-24 space-y-6">
                 {/* Avatar */}
-                <div className="relative w-48 h-48 mx-auto rounded-2xl overflow-hidden bg-muted">
+                <div className="relative mx-auto h-48 w-48 overflow-hidden rounded-2xl bg-muted/80 shadow-card ring-1 ring-border/50">
+                  <div className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-br from-primary/15 via-transparent to-transparent opacity-80" />
                   {profile?.avatar_url ? (
                     <Image
                       src={profile.avatar_url}
@@ -44,29 +46,36 @@ export default async function AboutPage() {
                       sizes="192px"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-muted-foreground">
+                    <div className="flex h-full w-full items-center justify-center text-4xl font-semibold text-muted-foreground">
                       {profile?.full_name?.charAt(0) || 'J'}
                     </div>
                   )}
                 </div>
 
                 {/* Quick Info */}
-                <Card>
-                  <CardContent className="p-4 space-y-3">
+                <Card className="border-border/60 shadow-card transition-shadow hover:shadow-card-hover">
+                  <CardContent className="space-y-3 p-4">
                     {profile?.location && (
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <MapPin className="h-4 w-4" />
+                        <span className="rounded-lg bg-primary/10 p-1.5 ring-1 ring-primary/15">
+                          <MapPin className="h-4 w-4 text-primary" />
+                        </span>
                         {profile.location}
                       </div>
                     )}
                     {profile?.email && (
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Mail className="h-4 w-4" />
+                        <span className="rounded-lg bg-primary/10 p-1.5 ring-1 ring-primary/15">
+                          <Mail className="h-4 w-4 text-primary" />
+                        </span>
                         {profile.email}
                       </div>
                     )}
                     {profile?.is_available_for_hire && (
-                      <Badge variant="success" className="w-full justify-center">
+                      <Badge
+                        variant="success"
+                        className="w-full justify-center border border-emerald-500/20 shadow-sm"
+                      >
                         Available for hire
                       </Badge>
                     )}
@@ -75,7 +84,10 @@ export default async function AboutPage() {
 
                 {/* Resume Download */}
                 {profile?.resume_url && (
-                  <Button className="w-full" asChild>
+                  <Button
+                    className="w-full shadow-card transition-shadow hover:shadow-card-hover"
+                    asChild
+                  >
                     <a href={profile.resume_url} download>
                       <Download className="mr-2 h-4 w-4" />
                       Download Resume
@@ -86,21 +98,21 @@ export default async function AboutPage() {
             </div>
 
             {/* Bio */}
-            <div className="md:col-span-2 space-y-8">
-              <div>
-                <h2 className="text-2xl font-bold mb-2">
+            <div className="space-y-8 md:col-span-2">
+              <div className="rounded-2xl border border-border/50 bg-card/40 p-6 shadow-card backdrop-blur-sm md:p-8">
+                <h2 className="mb-2 text-2xl font-semibold tracking-tight">
                   {profile?.full_name || 'John Doe'}
                 </h2>
-                <p className="text-lg text-primary mb-4">
+                <p className="mb-6 text-lg font-medium text-primary">
                   {profile?.title || 'Senior Mobile Developer (Flutter)'}
                 </p>
-                <div className="prose prose-neutral dark:prose-invert max-w-none">
+                <div className="prose prose-neutral max-w-none dark:prose-invert">
                   {profile?.bio?.split('\n\n').map((paragraph, index) => (
-                    <p key={index} className="text-muted-foreground">
+                    <p key={index} className="leading-relaxed text-muted-foreground">
                       {paragraph}
                     </p>
                   )) || (
-                    <p className="text-muted-foreground">
+                    <p className="leading-relaxed text-muted-foreground">
                       Senior Mobile Developer specialized in building high-performance Flutter applications using clean and scalable architectures.
                     </p>
                   )}
@@ -110,16 +122,17 @@ export default async function AboutPage() {
               {/* Experience Timeline */}
               {experiences.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-semibold mb-6">Experience</h3>
-                  <div className="space-y-6">
-                    {experiences.slice(0, 3).map((exp, index) => (
+                  <h3 className="mb-6 text-lg font-semibold tracking-tight">
+                    Experience
+                  </h3>
+                  <div className="space-y-4">
+                    {experiences.slice(0, 3).map((exp) => (
                       <div
                         key={exp.id}
-                        className="relative pl-8 pb-6 border-l-2 border-muted last:pb-0"
+                        className="rounded-2xl border border-border/60 bg-card/50 p-5 shadow-sm transition-[box-shadow,border-color] hover:border-primary/20 hover:shadow-card"
                       >
-                        <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary" />
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-                          <Calendar className="h-3 w-3" />
+                        <div className="mb-1 flex items-center gap-2 text-sm text-muted-foreground">
+                          <Calendar className="h-3.5 w-3.5 shrink-0" />
                           {formatDateRange(exp.start_date, exp.end_date)}
                         </div>
                         <h4 className="font-semibold">{exp.position}</h4>
@@ -127,7 +140,7 @@ export default async function AboutPage() {
                       </div>
                     ))}
                   </div>
-                  <Button variant="outline" className="mt-6" asChild>
+                  <Button variant="outline" className="mt-8 shadow-sm" asChild>
                     <Link href="/experience">View Full Experience</Link>
                   </Button>
                 </div>
@@ -136,6 +149,6 @@ export default async function AboutPage() {
           </div>
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }
