@@ -9,7 +9,7 @@ export const revalidate = 600; // ISR: refresh home every 10 minutes
 export default async function HomePage() {
   const [profile, projects, skills] = await Promise.all([
     getProfile(),
-    getProjects({ featured: true, limit: 3 }),
+    getProjects({ featured: true }),
     getSkills(),
   ]);
 
@@ -19,7 +19,7 @@ export default async function HomePage() {
 
       <FeaturedProjects projects={projects} />
 
-      <SkillsPreview skills={skills.slice(0, 12)} />
+      <SkillsPreview skills={skills} />
 
       <HomeCtaSection />
     </div>

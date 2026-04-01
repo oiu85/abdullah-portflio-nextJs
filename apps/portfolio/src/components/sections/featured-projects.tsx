@@ -1,9 +1,12 @@
 'use client';
 
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button, Card, CardContent } from '@portfolio/ui';
+import { cn } from '@portfolio/ui';
 import type { Project } from '@portfolio/types';
 import { SectionHeader } from '@/components/section-header';
 import { ProjectCard } from '@/components/projects/project-card';
@@ -15,6 +18,42 @@ interface FeaturedProjectsProps {
 }
 
 export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
+  const emblaOptions = useMemo(
+    () => ({
+      align: 'start' as const,
+      loop: projects.length > 1,
+      dragFree: false,
+    }),
+    [projects.length]
+  );
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+    setCanPrev(emblaApi.canScrollPrev());
+    setCanNext(emblaApi.canScrollNext());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+    onSelect();
+    return () => {
+      emblaApi.off('select', onSelect);
+      emblaApi.off('reInit', onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
   return (
     <section
       id="home-work"
@@ -45,10 +84,82 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             </Card>
           </Reveal>
         ) : (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
-            ))}
+          <div className="relative px-10 sm:px-12 md:px-14">
+            <div
+              className="overflow-hidden rounded-xl"
+              role="region"
+              aria-roledescription="carousel"
+              aria-label="Featured projects"
+              ref={emblaRef}
+            >
+              <div className="-ml-4 flex touch-pan-y">
+                {projects.map((project, index) => (
+                  <div
+                    key={project.id}
+                    className="min-w-0 shrink-0 grow-0 basis-full pl-4 md:basis-1/2 lg:basis-1/3"
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`Project ${index + 1} of ${projects.length}`}
+                  >
+                    <ProjectCard project={project} index={index} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {projects.length > 1 && (
+              <>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="icon"
+                  className={cn(
+                    'absolute left-1 top-1/2 z-10 h-11 w-11 -translate-y-1/2 rounded-full border border-border/80 bg-background/95 shadow-md backdrop-blur-sm hover:bg-background sm:left-2 md:-left-1 lg:-left-2',
+                    !canPrev && 'pointer-events-none opacity-40'
+                  )}
+                  onClick={scrollPrev}
+                  disabled={!canPrev}
+                  aria-label="Previous featured projects"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="icon"
+                  className={cn(
+                    'absolute right-1 top-1/2 z-10 h-11 w-11 -translate-y-1/2 rounded-full border border-border/80 bg-background/95 shadow-md backdrop-blur-sm hover:bg-background sm:right-2 md:-right-1 lg:-right-2',
+                    !canNext && 'pointer-events-none opacity-40'
+                  )}
+                  onClick={scrollNext}
+                  disabled={!canNext}
+                  aria-label="Next featured projects"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </Button>
+
+                <div
+                  className="mt-6 flex justify-center gap-2"
+                  aria-live="polite"
+                >
+                  {projects.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => emblaApi?.scrollTo(i)}
+                      className={cn(
+                        'h-2.5 min-w-2.5 rounded-full transition-all',
+                        selectedIndex === i
+                          ? 'w-6 bg-primary'
+                          : 'w-2.5 bg-muted-foreground/35 hover:bg-muted-foreground/55'
+                      )}
+                      aria-label={`Go to slide ${i + 1}`}
+                      aria-current={selectedIndex === i}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         )}
 

@@ -89,3 +89,40 @@ html {
 ::selection {
   @apply bg-primary text-primary-foreground;
 }
+
+/* Skills marquee — translate -50% matches duplicated track width */
+@keyframes skills-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.skills-marquee-track {
+  animation-name: skills-marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+/* Duplicate row participates as flex items via contents for a seamless -50% loop */
+.skills-marquee-dup {
+  display: contents;
+}
+
+.skills-marquee-section:hover .skills-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skills-marquee-track {
+    animation: none;
+    transform: none;
+  }
+
+  .skills-marquee-dup {
+    display: none;
+  }
+}

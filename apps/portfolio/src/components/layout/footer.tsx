@@ -157,7 +157,7 @@ export function Footer() {
 
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; {currentYear} Abdullah Alatrash. All rights reserved. @2025</p>
+          <p>&copy; {currentYear} Abdullah Alatrash. All rights reserved.</p>
         </div>
       </div>
     </footer>
