@@ -2,6 +2,12 @@
 
 import { motion } from 'framer-motion';
 import { cn } from '@portfolio/ui';
+import {
+  defaultViewport,
+  sectionHeaderContainer,
+  sectionHeaderSubtitle,
+  sectionHeaderTitle,
+} from '@/lib/motion';
 
 interface SectionHeaderProps {
   title: string;
@@ -17,30 +23,30 @@ export function SectionHeader({
   subtitleClassName,
 }: SectionHeaderProps) {
   return (
-    <div className={cn('text-center mb-16', className)}>
+    <motion.div
+      className={cn('mb-16 text-center', className)}
+      initial="hidden"
+      whileInView="visible"
+      viewport={defaultViewport}
+      variants={sectionHeaderContainer}
+    >
       <motion.h2
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="text-3xl md:text-4xl font-bold mb-4"
+        variants={sectionHeaderTitle}
+        className="mb-4 text-3xl font-bold md:text-4xl"
       >
         {title}
       </motion.h2>
       {subtitle ? (
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          variants={sectionHeaderSubtitle}
           className={cn(
-            'text-lg text-muted-foreground max-w-2xl mx-auto',
+            'mx-auto max-w-2xl text-lg text-muted-foreground',
             subtitleClassName
           )}
         >
           {subtitle}
         </motion.p>
       ) : null}
-    </div>
+    </motion.div>
   );
 }

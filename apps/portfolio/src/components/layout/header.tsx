@@ -8,14 +8,22 @@ import { Menu, X, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@portfolio/ui';
 import { cn } from '@portfolio/ui';
+import { useHomeScrollSpy, type HomeSectionId } from '@/hooks/use-home-scroll-spy';
 
-const navItems = [
-  { href: '/', label: 'Home' },
+type NavItem = {
+  href: string;
+  label: string;
+  /** When set, this link is highlighted on `/` while this section is in view. */
+  homeSection?: HomeSectionId;
+};
+
+const navItems: NavItem[] = [
+  { href: '/', label: 'Home', homeSection: 'home-hero' },
   { href: '/about', label: 'About' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/skills', label: 'Skills' },
+  { href: '/projects', label: 'Projects', homeSection: 'home-work' },
+  { href: '/skills', label: 'Skills', homeSection: 'home-skills' },
   { href: '/experience', label: 'Experience' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/contact', label: 'Contact', homeSection: 'home-cta' },
 ];
 
 export function Header() {
@@ -24,6 +32,10 @@ export function Header() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
+  const activeSection = useHomeScrollSpy(pathname === '/');
+  const effectiveSection =
+    activeSection ?? (pathname === '/' ? 'home-hero' : null);
 
   useEffect(() => {
     setMounted(true);
@@ -41,36 +53,41 @@ export function Header() {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
+  const isNavActive = (item: NavItem) => {
+    if (item.homeSection && pathname === '/') {
+      return effectiveSection === item.homeSection;
+    }
+    return pathname === item.href;
+  };
+
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        'fixed left-0 right-0 top-0 z-50 transition-all duration-300',
         isScrolled || isMobileMenuOpen
-          ? 'bg-background/80 backdrop-blur-lg border-b shadow-sm'
+          ? 'border-b bg-background/80 shadow-sm backdrop-blur-lg'
           : 'bg-transparent'
       )}
     >
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+        <div className="flex h-16 items-center justify-between">
           <Link
             href="/"
-            className="text-xl font-bold tracking-tight hover:text-primary transition-colors"
+            className="text-xl font-bold tracking-tight transition-colors hover:text-primary"
           >
             AA<span className="text-primary">.</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden items-center gap-1 md:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'px-3 py-2 text-sm font-medium rounded-lg transition-colors',
-                  pathname === item.href
-                    ? 'text-primary bg-primary/10'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                  isNavActive(item)
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
               >
                 {item.label}
@@ -78,7 +95,6 @@ export function Header() {
             ))}
           </div>
 
-          {/* Theme Toggle & Mobile Menu Button */}
           <div className="flex items-center gap-2">
             {mounted && (
               <Button
@@ -111,7 +127,6 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
@@ -119,18 +134,18 @@ export function Header() {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
-              className="md:hidden overflow-hidden border-t"
+              className="overflow-hidden border-t md:hidden"
             >
-              <div className="bg-background/95 backdrop-blur-lg py-4 space-y-1">
+              <div className="space-y-1 bg-background/95 py-4 backdrop-blur-lg">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      'block px-3 py-2 text-base font-medium rounded-lg transition-colors',
-                      pathname === item.href
-                        ? 'text-primary bg-primary/10'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                      'block rounded-lg px-3 py-2 text-base font-medium transition-colors',
+                      isNavActive(item)
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                     )}
                   >
                     {item.label}

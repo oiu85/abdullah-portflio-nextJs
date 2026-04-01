@@ -1,12 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, ExternalLink, Github } from 'lucide-react';
-import { Button, Card, CardContent, Badge } from '@portfolio/ui';
+import { ArrowRight } from 'lucide-react';
+import { Button, Card, CardContent } from '@portfolio/ui';
 import type { Project } from '@portfolio/types';
 import { SectionHeader } from '@/components/section-header';
+import { ProjectCard } from '@/components/projects/project-card';
+import { Reveal } from '@/components/motion/reveal';
+import { motionDuration, motionEase } from '@/lib/motion';
 
 interface FeaturedProjectsProps {
   projects: Project[];
@@ -14,7 +16,11 @@ interface FeaturedProjectsProps {
 
 export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   return (
-    <section className="py-24">
+    <section
+      id="home-work"
+      className="relative scroll-mt-20 bg-background py-24"
+    >
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="Featured Projects"
@@ -22,130 +28,47 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
         />
 
         {projects.length === 0 ? (
-          <Card className="max-w-lg mx-auto border-dashed bg-muted/30">
-            <CardContent className="py-10 px-6 text-center space-y-4">
-              <p className="text-muted-foreground">
-                No featured projects are highlighted yet. Browse the full list for case studies and
-                work samples.
-              </p>
-              <Button asChild>
-                <Link href="/projects">
-                  View all projects
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <Reveal>
+            <Card className="mx-auto max-w-lg border-dashed bg-muted/30">
+              <CardContent className="space-y-4 py-10 px-6 text-center">
+                <p className="text-muted-foreground">
+                  No featured projects are highlighted yet. Browse the full list for case studies and
+                  work samples.
+                </p>
+                <Button asChild>
+                  <Link href="/projects">
+                    View all projects
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </Reveal>
         ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card className="h-full flex flex-col overflow-hidden group">
-                {/* Project Image */}
-                <div className="relative h-48 bg-muted overflow-hidden">
-                  {project.featured_image ? (
-                    <Image
-                      src={project.featured_image}
-                      alt={project.title}
-                      fill
-                      className="object-cover transition-transform group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20">
-                      <span className="text-4xl font-bold text-primary/30">
-                        {project.title.charAt(0)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <CardContent className="flex-1 flex flex-col p-6">
-                  {/* Title */}
-                  <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-                    <Link href={`/projects/${project.slug}`}>{project.title}</Link>
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-muted-foreground mb-4 flex-1">
-                    {project.short_description}
-                  </p>
-
-                  {/* Technologies */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.slice(0, 4).map((tech) => (
-                      <Badge key={tech} variant="secondary">
-                        {tech}
-                      </Badge>
-                    ))}
-                    {project.technologies.length > 4 && (
-                      <Badge variant="outline">
-                        +{project.technologies.length - 4}
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Links */}
-                  <div className="flex gap-3">
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={`/projects/${project.slug}`}>
-                        View Details
-                        <ArrowRight className="ml-1 h-3 w-3" />
-                      </Link>
-                    </Button>
-                    {project.github_url && (
-                      <Button variant="ghost" size="icon" asChild>
-                        <a
-                          href={project.github_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="View on GitHub"
-                        >
-                          <Github className="h-4 w-4" />
-                        </a>
-                      </Button>
-                    )}
-                    {project.live_url && (
-                      <Button variant="ghost" size="icon" asChild>
-                        <a
-                          href={project.live_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="View live site"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {projects.map((project, index) => (
+              <ProjectCard key={project.id} project={project} index={index} />
+            ))}
+          </div>
         )}
 
         {projects.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-center mt-12"
-        >
-          <Button variant="outline" size="lg" asChild>
-            <Link href="/projects">
-              View All Projects
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: motionDuration.md, ease: motionEase.out, delay: 0.12 }}
+            className="mt-12 text-center"
+          >
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/projects">
+                  View All Projects
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </section>

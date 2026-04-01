@@ -1,15 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from '@portfolio/ui';
+import { Dialog, DialogContent, DialogTitle } from '@portfolio/ui';
 import { Button } from '@portfolio/ui';
 import { cn } from '@portfolio/ui';
+import { motion, AnimatePresence } from 'framer-motion';
+import { motionDuration, motionEase } from '@/lib/motion';
 
 interface ImageLightboxProps {
   images: string[];
@@ -32,6 +30,14 @@ export function ImageLightbox({
     setCurrentIndex(initialIndex);
   }, [initialIndex, isOpen]);
 
+  const handlePrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  }, [images.length]);
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  }, [images.length]);
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -52,15 +58,7 @@ export function ImageLightbox({
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, currentIndex]);
-
-  const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
+  }, [isOpen, handlePrevious, handleNext, onClose]);
 
   if (!isOpen || images.length === 0) return null;
 
@@ -69,30 +67,28 @@ export function ImageLightbox({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-7xl w-full h-full max-h-[95vh] p-0 border-0 bg-transparent [&>button]:hidden [&>div]:bg-black/95"
+        className="max-h-[95vh] w-full max-w-7xl border-0 bg-transparent p-0 [&>button]:hidden [&>div]:bg-black/95"
         onInteractOutside={onClose}
       >
         <DialogTitle className="sr-only">
           Image Lightbox - {alt} {currentIndex + 1} of {images.length}
         </DialogTitle>
-        <div className="relative w-full h-full flex items-center justify-center">
-          {/* Close Button */}
+        <div className="relative flex h-full w-full items-center justify-center">
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-4 right-4 z-50 bg-background/80 hover:bg-background text-foreground"
+            className="absolute right-4 top-4 z-50 bg-background/80 text-foreground hover:bg-background"
             onClick={onClose}
             aria-label="Close"
           >
             <X className="h-6 w-6" />
           </Button>
 
-          {/* Previous Button */}
           {images.length > 1 && (
             <Button
               variant="ghost"
               size="icon"
-              className="absolute left-4 z-50 bg-background/80 hover:bg-background text-foreground"
+              className="absolute left-4 top-1/2 z-50 -translate-y-1/2 bg-background/80 text-foreground hover:bg-background"
               onClick={handlePrevious}
               aria-label="Previous image"
             >
@@ -100,12 +96,11 @@ export function ImageLightbox({
             </Button>
           )}
 
-          {/* Next Button */}
           {images.length > 1 && (
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-4 z-50 bg-background/80 hover:bg-background text-foreground"
+              className="absolute right-4 top-1/2 z-50 -translate-y-1/2 bg-background/80 text-foreground hover:bg-background"
               onClick={handleNext}
               aria-label="Next image"
             >
@@ -113,38 +108,48 @@ export function ImageLightbox({
             </Button>
           )}
 
-          {/* Image */}
-          <div className="relative w-full h-full max-w-7xl max-h-[95vh] flex items-center justify-center p-4">
-            <div className="relative w-full h-full">
-              <Image
-                src={currentImage}
-                alt={`${alt} ${currentIndex + 1}`}
-                fill
-                className="object-contain"
-                priority
-                sizes="(max-width: 1280px) 100vw, 1280px"
-              />
-            </div>
+          <div className="relative flex h-full max-h-[95vh] w-full max-w-7xl items-center justify-center p-4">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={currentIndex}
+                initial={{ opacity: 0, scale: 0.985 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.99 }}
+                transition={{
+                  duration: motionDuration.xs,
+                  ease: motionEase.out,
+                }}
+                className="relative h-full min-h-[40vh] w-full"
+              >
+                <Image
+                  src={currentImage}
+                  alt={`${alt} ${currentIndex + 1}`}
+                  fill
+                  className="object-contain"
+                  priority
+                  sizes="(max-width: 1280px) 100vw, 1280px"
+                />
+              </motion.div>
+            </AnimatePresence>
           </div>
 
-          {/* Image Counter */}
           {images.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 bg-background/80 px-4 py-2 rounded-full text-sm text-foreground">
+            <div className="absolute bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full bg-background/80 px-4 py-2 text-sm text-foreground">
               {currentIndex + 1} / {images.length}
             </div>
           )}
 
-          {/* Thumbnail Navigation */}
           {images.length > 1 && images.length <= 10 && (
-            <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-50 flex gap-2 max-w-full overflow-x-auto px-4">
+            <div className="absolute bottom-16 left-1/2 z-50 flex max-w-full -translate-x-1/2 gap-2 overflow-x-auto px-4">
               {images.map((image, index) => (
                 <button
                   key={index}
+                  type="button"
                   onClick={() => setCurrentIndex(index)}
                   className={cn(
-                    'relative w-20 h-20 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0',
+                    'relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all',
                     currentIndex === index
-                      ? 'border-primary scale-110'
+                      ? 'scale-110 border-primary'
                       : 'border-transparent opacity-60 hover:opacity-100'
                   )}
                   aria-label={`Go to image ${index + 1}`}
@@ -165,4 +170,3 @@ export function ImageLightbox({
     </Dialog>
   );
 }
-

@@ -1,0 +1,25 @@
+/**
+ * Motion design tokens — durations and easings used across the portfolio.
+ * Keeps scroll reveals and interactions consistent (Stripe/Linear-style restraint).
+ */
+
+export const motionEase = {
+  out: [0.16, 1, 0.3, 1] as const,
+  outSoft: [0.22, 1, 0.36, 1] as const,
+  inOut: [0.4, 0, 0.2, 1] as const,
+} as const;
+
+export const motionDuration = {
+  xs: 0.2,
+  sm: 0.35,
+  md: 0.5,
+  lg: 0.65,
+  xl: 0.85,
+} as const;
+
+/** Default viewport for whileInView — slight lead, fire once. */
+export const defaultViewport = {
+  once: true,
+  amount: 0.25,
+  margin: '-64px 0px -64px 0px',
+} as const;

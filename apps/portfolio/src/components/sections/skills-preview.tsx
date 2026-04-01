@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { Button, Badge } from '@portfolio/ui';
+import { Button } from '@portfolio/ui';
 import type { Skill } from '@portfolio/types';
 import { SkillIcon } from '../skill-icon';
 import { SectionHeader } from '@/components/section-header';
+import { StaggerItem, StaggerReveal } from '@/components/motion/reveal';
+import { motionDuration, motionEase } from '@/lib/motion';
 
 interface SkillsPreviewProps {
   skills: Skill[];
@@ -27,54 +29,49 @@ export function SkillsPreview({ skills }: SkillsPreviewProps) {
   if (skills.length === 0) return null;
 
   return (
-    <section className="py-24 bg-muted/30">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="home-skills" className="relative overflow-hidden py-24 bg-muted/30">
+      <div className="pointer-events-none absolute -left-24 top-1/4 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-secondary/5 blur-3xl" />
+
+      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="Skills & Technologies"
           subtitle="Technologies and tools I work with to bring ideas to life."
         />
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto"
-        >
-          {skills.map((skill, index) => (
-            <motion.div
-              key={skill.id}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-            >
-              <span
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-transform hover:scale-105 ${
+        <StaggerReveal className="mx-auto flex max-w-4xl flex-wrap justify-center gap-3">
+          {skills.map((skill) => (
+            <StaggerItem key={skill.id}>
+              <motion.span
+                whileHover={{ y: -2, scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: motionDuration.xs, ease: motionEase.out }}
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium shadow-sm ${
                   categoryColors[skill.category] || categoryColors.other
                 }`}
               >
                 <SkillIcon icon={skill.icon} name={skill.name} size="sm" transparent />
                 {skill.name}
-              </span>
-            </motion.div>
+              </motion.span>
+            </StaggerItem>
           ))}
-        </motion.div>
+        </StaggerReveal>
 
-        {/* View All Button */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-center mt-12"
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: motionDuration.md, ease: motionEase.out, delay: 0.15 }}
+          className="mt-12 text-center"
         >
-          <Button variant="outline" size="lg" asChild>
-            <Link href="/skills">
-              View All Skills
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button variant="outline" size="lg" asChild>
+              <Link href="/skills">
+                View All Skills
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </motion.div>
         </motion.div>
       </div>
     </section>
