@@ -59,7 +59,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
     <section
       ref={sectionRef}
       id="home-hero"
-      className="relative z-10 flex min-h-screen flex-col overflow-x-hidden pt-16 pb-28 md:pb-36 lg:pb-44"
+      className="relative z-10 flex flex-col overflow-x-hidden pt-16 pb-20 md:pb-24"
     >
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/80" />
 
@@ -133,7 +133,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
         <div className="liquid-glass-layer opacity-[0.45]" />
       </div>
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-center px-4 py-10 text-center sm:px-6 lg:px-8">
+      <div className="relative z-10 flex flex-col items-center px-4 py-6 text-center sm:px-6 md:py-8 lg:px-8">
       <motion.div
         className="mx-auto w-full max-w-4xl"
         style={{ y: contentY, opacity: heroOpacity }}
@@ -209,7 +209,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
 
           <motion.div
             variants={staggerItem}
-            className="mb-12 flex flex-col justify-center gap-4 sm:flex-row"
+            className="mb-8 flex flex-col justify-center gap-4 sm:flex-row"
           >
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
               <Button

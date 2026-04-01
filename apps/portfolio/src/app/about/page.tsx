@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, Mail, Download, Calendar } from 'lucide-react';
+import { MapPin, Mail, Calendar } from 'lucide-react';
 import { Button, Badge, Card, CardContent } from '@portfolio/ui';
 import { getProfile, getExperience } from '@/lib/data';
 import { formatDateRange } from '@portfolio/lib/utils';
 import { PageShell } from '@/components/page-shell';
 import { PageHeader } from '@/components/page-header';
 import { Reveal } from '@/components/motion/reveal';
+import { ResumeDownloadButton } from '@/components/resume-download-button';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -87,18 +88,10 @@ export default async function AboutPage() {
                 </Card>
                 </Reveal>
 
-                {/* Resume Download */}
+                {/* Resume Download — uses /api/resume so the file saves (cross-origin href + download is ignored). */}
                 {profile?.resume_url && (
                   <Reveal>
-                  <Button
-                    className="w-full shadow-card transition-shadow hover:shadow-card-hover"
-                    asChild
-                  >
-                    <a href={profile.resume_url} download>
-                      <Download className="mr-2 h-4 w-4" />
-                      Download Resume
-                    </a>
-                  </Button>
+                    <ResumeDownloadButton className="w-full shadow-card transition-shadow hover:shadow-card-hover" />
                   </Reveal>
                 )}
               </div>

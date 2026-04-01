@@ -98,7 +98,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   return (
     <section
       id="home-work"
-      className="relative scroll-mt-20 bg-background py-section"
+      className="relative scroll-mt-20 bg-background pt-section-tight pb-section"
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

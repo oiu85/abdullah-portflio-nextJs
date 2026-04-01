@@ -13,9 +13,9 @@ export function HomePageSkeleton() {
       aria-label="Loading home page"
     >
       {/* Hero */}
-      <section className="relative z-10 flex min-h-screen flex-col overflow-x-hidden pt-16 pb-28 md:pb-36 lg:pb-44">
+      <section className="relative z-10 flex flex-col overflow-x-hidden pt-16 pb-20 md:pb-24">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/80" />
-        <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-center px-4 py-10 text-center sm:px-6 lg:px-8">
+        <div className="relative z-10 flex flex-col items-center px-4 py-6 text-center sm:px-6 md:py-8 lg:px-8">
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center">
             <SkeletonBlock
               rounded="full"
@@ -42,7 +42,7 @@ export function HomePageSkeleton() {
               <SkeletonBlock rounded="md" className="h-5 w-[92%] mx-auto" />
               <SkeletonBlock rounded="md" className="h-5 w-[78%] mx-auto" />
             </div>
-            <div className="mb-12 flex flex-col justify-center gap-4 sm:flex-row">
+            <div className="mb-8 flex flex-col justify-center gap-4 sm:flex-row">
               <SkeletonBlock rounded="lg" className="h-12 w-full min-w-[200px] sm:w-[200px]" />
               <SkeletonBlock rounded="lg" className="h-12 w-full min-w-[200px] sm:w-[200px]" />
             </div>
@@ -59,7 +59,7 @@ export function HomePageSkeleton() {
       </section>
 
       {/* Featured projects */}
-      <section className="relative scroll-mt-20 bg-background py-section">
+      <section className="relative scroll-mt-20 bg-background pt-section-tight pb-section">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-14 text-center md:mb-16">
