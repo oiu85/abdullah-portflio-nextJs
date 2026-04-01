@@ -1,27 +1,13 @@
-import { getProfile, getProjects, getSkills } from '@/lib/data';
-import { HeroSection } from '@/components/sections/hero-section';
-import { FeaturedProjects } from '@/components/sections/featured-projects';
-import { SkillsPreview } from '@/components/sections/skills-preview';
-import { HomeCtaSection } from '@/components/sections/home-cta-section';
+import { Suspense } from 'react';
+import { HomePageSkeleton } from '@/components/skeletons/home-page-skeleton';
+import { HomePageContent } from './home-page-content';
 
-export const revalidate = 600; // ISR: refresh home every 10 minutes
+export const revalidate = 600;
 
-export default async function HomePage() {
-  const [profile, projects, skills] = await Promise.all([
-    getProfile(),
-    getProjects({ featured: true }),
-    getSkills(),
-  ]);
-
+export default function HomePage() {
   return (
-    <div className="flex flex-col">
-      <HeroSection profile={profile} />
-
-      <FeaturedProjects projects={projects} />
-
-      <SkillsPreview skills={skills} />
-
-      <HomeCtaSection />
-    </div>
+    <Suspense fallback={<HomePageSkeleton />}>
+      <HomePageContent />
+    </Suspense>
   );
 }
