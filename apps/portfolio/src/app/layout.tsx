@@ -9,6 +9,7 @@ import { NavigationProgress } from '@/components/layout/navigation-progress';
 import { JsonLd } from '@/components/json-ld';
 import { getProfile, getSiteContent } from '@/lib/data';
 import { buildFooterSocialItems } from '@/lib/footer-socials';
+import { ElevenLabsConvaiWidget } from '@/components/elevenlabs-convai-widget';
 
 const defaultSiteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
@@ -72,6 +73,7 @@ export default async function RootLayout({
             />
           </div>
         </Providers>
+        <ElevenLabsConvaiWidget />
       </body>
     </html>
   );
