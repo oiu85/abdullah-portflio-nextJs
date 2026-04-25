@@ -81,14 +81,14 @@ export function SkillsPreview({ skills, skillsPreview }: SkillsPreviewProps) {
       <div className="pointer-events-none absolute -left-24 top-1/4 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-secondary/5 blur-3xl" />
 
-      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto w-full max-w-editorial px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title={skillsPreview.title}
           subtitle={skillsPreview.subtitle}
         />
       </div>
 
-      <div className="container relative mx-auto mt-4 px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto mt-4 w-full max-w-editorial px-4 sm:px-6 lg:px-8">
         <div
           className="skills-marquee-section glass-surface relative overflow-hidden rounded-2xl p-3 sm:p-4"
         >
@@ -114,7 +114,7 @@ export function SkillsPreview({ skills, skillsPreview }: SkillsPreviewProps) {
         </div>
       </div>
 
-      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto w-full max-w-editorial px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}

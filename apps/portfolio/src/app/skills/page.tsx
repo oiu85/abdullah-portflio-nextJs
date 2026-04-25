@@ -3,6 +3,7 @@ import { getSiteContent, getSkillsBySection } from '@/lib/data';
 import { SkillsDisplay } from '@/components/skills-display';
 import { PageShell } from '@/components/page-shell';
 import { PageHeader } from '@/components/page-header';
+import { SectionFrame } from '@/components/section-frame';
 
 export const metadata: Metadata = {
   title: 'Skills',
@@ -20,14 +21,14 @@ export default async function SkillsPage() {
 
   return (
     <PageShell>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionFrame>
         <PageHeader
           eyebrow={ph.eyebrow}
           title={ph.title}
           description={ph.description}
         />
 
-        <div className="mx-auto max-w-5xl space-y-14">
+        <div className="mx-auto max-w-editorial space-y-block-gap pb-4">
           {skillGroups.map(({ section, skills }) => (
             <SkillsDisplay
               key={section.id}
@@ -42,7 +43,7 @@ export default async function SkillsPage() {
             <p className="text-muted-foreground">No skills found.</p>
           </div>
         )}
-      </div>
+      </SectionFrame>
     </PageShell>
   );
 }

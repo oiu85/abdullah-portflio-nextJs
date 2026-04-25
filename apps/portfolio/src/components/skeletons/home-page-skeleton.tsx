@@ -13,47 +13,39 @@ export function HomePageSkeleton() {
       aria-label="Loading home page"
     >
       {/* Hero */}
-      <section className="relative z-10 flex flex-col overflow-x-hidden pt-16 pb-20 md:pb-24">
+      <section className="relative z-10 flex flex-col overflow-x-hidden pt-16 pb-20 md:pb-28">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/80" />
-        <div className="relative z-10 flex flex-col items-center px-4 py-6 text-center sm:px-6 md:py-8 lg:px-8">
-          <div className="mx-auto flex w-full max-w-4xl flex-col items-center">
-            <SkeletonBlock
-              rounded="full"
-              className="mb-6 h-9 w-40 max-w-[90%]"
-            />
-            <SkeletonBlock
-              rounded="full"
-              className="mb-10 h-[200px] w-[200px] shrink-0"
-            />
-            <SkeletonBlock
-              rounded="md"
-              className="mb-3 h-3 w-24 max-w-[50%]"
-            />
-            <SkeletonBlock
-              rounded="lg"
-              className="mb-6 h-12 w-full max-w-md md:h-16"
-            />
-            <SkeletonBlock
-              rounded="md"
-              className="mb-4 h-7 w-full max-w-lg"
-            />
-            <div className="mb-8 flex w-full max-w-2xl flex-col gap-3">
-              <SkeletonBlock rounded="md" className="h-5 w-full" />
-              <SkeletonBlock rounded="md" className="h-5 w-[92%] mx-auto" />
-              <SkeletonBlock rounded="md" className="h-5 w-[78%] mx-auto" />
+        <div className="relative z-10 mx-auto w-full max-w-editorial px-4 py-6 sm:px-6 md:py-10 lg:px-8">
+          <div className="grid items-center gap-10 text-center lg:grid-cols-12 lg:gap-12 lg:text-left">
+            <div className="flex flex-col items-center lg:col-span-7 lg:items-start">
+              <SkeletonBlock rounded="full" className="mb-5 h-9 w-40 max-w-[90%]" />
+              <SkeletonBlock rounded="md" className="mb-3 h-3 w-48 max-w-[90%]" />
+              <SkeletonBlock rounded="lg" className="mb-2 h-4 w-32 max-w-[50%]" />
+              <SkeletonBlock rounded="lg" className="mb-5 h-14 w-full max-w-xl md:h-16" />
+              <div className="mb-8 flex w-full max-w-xl flex-col gap-3 lg:mx-0">
+                <SkeletonBlock rounded="md" className="h-5 w-full" />
+                <SkeletonBlock rounded="md" className="h-5 w-[92%] lg:mx-0 lg:mr-auto" />
+                <SkeletonBlock rounded="md" className="h-5 w-[78%] lg:mx-0 lg:mr-auto" />
+              </div>
+              <div className="mb-8 flex w-full flex-col justify-center gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
+                <SkeletonBlock rounded="lg" className="h-12 w-full min-w-[180px] sm:w-[200px]" />
+                <SkeletonBlock rounded="lg" className="h-12 w-full min-w-[180px] sm:w-[200px]" />
+              </div>
+              <div className="flex justify-center gap-3 pb-2 lg:justify-start">
+                <SkeletonBlock rounded="full" className="h-12 w-12" />
+                <SkeletonBlock rounded="full" className="h-12 w-12" />
+                <SkeletonBlock rounded="full" className="h-12 w-12" />
+              </div>
             </div>
-            <div className="mb-8 flex flex-col justify-center gap-4 sm:flex-row">
-              <SkeletonBlock rounded="lg" className="h-12 w-full min-w-[200px] sm:w-[200px]" />
-              <SkeletonBlock rounded="lg" className="h-12 w-full min-w-[200px] sm:w-[200px]" />
-            </div>
-            <div className="flex justify-center gap-3 pb-2">
-              <SkeletonBlock rounded="full" className="h-12 w-12" />
-              <SkeletonBlock rounded="full" className="h-12 w-12" />
-              <SkeletonBlock rounded="full" className="h-12 w-12" />
+            <div className="flex justify-center lg:col-span-5 lg:justify-end">
+              <SkeletonBlock
+                rounded="lg"
+                className="aspect-[4/5] w-full max-w-[280px] sm:max-w-[320px]"
+              />
             </div>
           </div>
         </div>
-        <div className="absolute bottom-10 left-1/2 z-10 -translate-x-1/2 md:bottom-12">
+        <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 md:bottom-10">
           <SkeletonBlock rounded="full" className="h-10 w-6" />
         </div>
       </section>
@@ -82,7 +74,7 @@ export function HomePageSkeleton() {
                 key={i}
                 className="glass-surface flex flex-col overflow-hidden rounded-2xl"
               >
-                <SkeletonBlock rounded="none" className="aspect-video w-full rounded-none" />
+                <SkeletonBlock rounded="none" className="aspect-[16/10] w-full rounded-none" />
                 <div className="flex flex-1 flex-col gap-3 p-5">
                   <SkeletonBlock rounded="md" className="h-5 w-3/4" />
                   <SkeletonBlock rounded="md" className="h-4 w-full" />

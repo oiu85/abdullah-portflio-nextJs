@@ -35,7 +35,7 @@ export function ExperiencePageContent({
         description={pageHeader.description}
       />
 
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-editorial">
         {experiences.length > 0 ? (
           <div className="relative">
             <div

@@ -6,6 +6,8 @@ import { Providers } from './providers';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { NavigationProgress } from '@/components/layout/navigation-progress';
+import { GrainOverlay } from '@/components/shell/grain-overlay';
+import { PageTransition } from '@/components/motion/page-transition';
 import { JsonLd } from '@/components/json-ld';
 import { getProfile, getSiteContent } from '@/lib/data';
 import { buildFooterSocialItems } from '@/lib/footer-socials';
@@ -59,12 +61,15 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased">
+        <GrainOverlay />
         <JsonLd profile={profile} siteUrl={defaultSiteUrl} />
         <Providers>
           <NavigationProgress />
-          <div className="flex min-h-screen flex-col">
+          <div className="relative z-[1] flex min-h-screen flex-col">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex min-h-0 flex-1 flex-col">
+              <PageTransition>{children}</PageTransition>
+            </main>
             <Footer
               copy={siteContent.footer}
               email={profile?.email ?? ''}

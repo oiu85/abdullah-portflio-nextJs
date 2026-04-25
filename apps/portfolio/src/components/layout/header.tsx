@@ -79,7 +79,12 @@ export function Header() {
       )}
     >
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div
+          className={cn(
+            'flex items-center justify-between transition-[height] duration-300 ease-out',
+            isScrolled || isMobileMenuOpen ? 'h-14' : 'h-16'
+          )}
+        >
           <Link
             href="/"
             className="group text-lg font-semibold tracking-tight transition-colors hover:text-primary"

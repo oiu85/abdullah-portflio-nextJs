@@ -12,6 +12,33 @@ const config: Config = {
       spacing: {
         section: 'var(--section-y)',
         'section-tight': 'var(--section-y-tight)',
+        'block-gap': 'var(--block-gap)',
+      },
+      maxWidth: {
+        editorial: '72rem',
+        content: '42rem',
+      },
+      fontSize: {
+        'display-xl': [
+          'clamp(2.5rem, 1.25rem + 5.5vw, 4.5rem)',
+          { lineHeight: '1.04', letterSpacing: 'var(--display-tracking)' },
+        ],
+        display: [
+          'clamp(2rem, 1rem + 3.8vw, 3.25rem)',
+          { lineHeight: '1.08', letterSpacing: 'var(--display-tracking)' },
+        ],
+        title: [
+          'clamp(1.25rem, 0.9rem + 1.2vw, 1.5rem)',
+          { lineHeight: '1.2', fontWeight: '600' },
+        ],
+        body: [
+          'clamp(1rem, 0.95rem + 0.2vw, 1.0625rem)',
+          { lineHeight: '1.6' },
+        ],
+        caption: [
+          'clamp(0.75rem, 0.7rem + 0.15vw, 0.8125rem)',
+          { lineHeight: '1.45', letterSpacing: '0.02em' },
+        ],
       },
       letterSpacing: {
         display: 'var(--display-tracking)',
@@ -86,6 +113,12 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        surface: {
+          elevated: 'hsl(var(--surface-elevated))',
+          inset: 'hsl(var(--surface-inset))',
+        },
+        'accent-line': 'hsl(var(--accent-line))',
+        'foreground-display': 'hsl(var(--foreground-display))',
       },
       borderRadius: {
         lg: 'var(--radius)',

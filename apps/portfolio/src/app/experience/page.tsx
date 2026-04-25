@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getExperience, getSiteContent } from '@/lib/data';
 import { ExperiencePageContent } from '@/components/experience/experience-page-content';
 import { PageShell } from '@/components/page-shell';
+import { SectionFrame } from '@/components/section-frame';
 
 export const metadata: Metadata = {
   title: 'Experience',
@@ -19,12 +20,12 @@ export default async function ExperiencePage() {
 
   return (
     <PageShell>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionFrame>
         <ExperiencePageContent
           experiences={experiences}
           pageHeader={siteContent.experience.page_header}
         />
-      </div>
+      </SectionFrame>
     </PageShell>
   );
 }

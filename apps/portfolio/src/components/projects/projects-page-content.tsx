@@ -7,6 +7,7 @@ import { ProjectCard } from '@/components/projects/project-card';
 import type { PageHeaderCopy } from '@portfolio/validation';
 import { PageShell } from '@/components/page-shell';
 import { PageHeader } from '@/components/page-header';
+import { SectionFrame } from '@/components/section-frame';
 import { Reveal } from '@/components/motion/reveal';
 import {
   defaultViewport,
@@ -25,7 +26,7 @@ export function ProjectsPageContent({
 }: ProjectsPageContentProps) {
   return (
     <PageShell>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionFrame>
         <PageHeader
           eyebrow={pageHeader.eyebrow}
           title={pageHeader.title}
@@ -34,7 +35,7 @@ export function ProjectsPageContent({
 
         {projects.length > 0 ? (
           <motion.div
-            className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+            className="mt-4 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
             initial="hidden"
             whileInView="visible"
             viewport={defaultViewport}
@@ -59,7 +60,7 @@ export function ProjectsPageContent({
             </Card>
           </Reveal>
         )}
-      </div>
+      </SectionFrame>
     </PageShell>
   );
 }

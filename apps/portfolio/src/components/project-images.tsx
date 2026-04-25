@@ -11,6 +11,8 @@ import { cn, Button } from '@portfolio/ui';
 interface ProjectImagesContextType {
   openLightbox: (index: number) => void;
   allImages: string[];
+  /** Subset shown in carousel (e.g. exclude featured when hero already shows it). */
+  carouselImages: string[];
   projectTitle: string;
 }
 
@@ -21,6 +23,11 @@ interface ProjectImagesProviderProps {
   galleryImages?: string[] | null;
   projectTitle: string;
   children: React.ReactNode;
+  /**
+   * When true, carousel omits the featured image if additional gallery URLs exist
+   * (detail page hero already shows the cover).
+   */
+  dedupeFeaturedInCarousel?: boolean;
 }
 
 function ProjectImagesProvider({
@@ -28,6 +35,7 @@ function ProjectImagesProvider({
   galleryImages,
   projectTitle,
   children,
+  dedupeFeaturedInCarousel = false,
 }: ProjectImagesProviderProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -43,6 +51,14 @@ function ProjectImagesProvider({
     return images;
   }, [featuredImage, galleryImages]);
 
+  const carouselImages = useMemo(() => {
+    if (!dedupeFeaturedInCarousel || !featuredImage) {
+      return allImages;
+    }
+    const withoutFeatured = allImages.filter((url) => url !== featuredImage);
+    return withoutFeatured.length > 0 ? withoutFeatured : [];
+  }, [dedupeFeaturedInCarousel, featuredImage, allImages]);
+
   const openLightbox = (index: number) => {
     setLightboxIndex(index);
     setLightboxOpen(true);
@@ -53,7 +69,9 @@ function ProjectImagesProvider({
   };
 
   return (
-    <ProjectImagesContext.Provider value={{ openLightbox, allImages, projectTitle }}>
+    <ProjectImagesContext.Provider
+      value={{ openLightbox, allImages, carouselImages, projectTitle }}
+    >
       {children}
       {allImages.length > 0 && (
         <ImageLightbox
@@ -323,25 +341,34 @@ function ProjectImageCarousel() {
   const context = useContext(ProjectImagesContext);
   if (!context) return null;
 
-  const { openLightbox, allImages, projectTitle } = context;
+  const { openLightbox, allImages, carouselImages, projectTitle } = context;
 
   if (allImages.length === 0) return null;
 
-  if (allImages.length === 1) {
+  if (carouselImages.length === 0) {
+    return null;
+  }
+
+  if (carouselImages.length === 1) {
+    const idx = allImages.indexOf(carouselImages[0]);
     return (
       <SingleProjectHeroImage
-        src={allImages[0]}
+        src={carouselImages[0]}
         projectTitle={projectTitle}
-        onOpen={() => openLightbox(0)}
+        onOpen={() => openLightbox(idx >= 0 ? idx : 0)}
       />
     );
   }
 
   return (
     <ProjectImageSlider
-      allImages={allImages}
+      allImages={carouselImages}
       projectTitle={projectTitle}
-      onOpenLightbox={openLightbox}
+      onOpenLightbox={(carouselIndex) => {
+        const url = carouselImages[carouselIndex];
+        const globalIdx = url ? allImages.indexOf(url) : -1;
+        openLightbox(globalIdx >= 0 ? globalIdx : carouselIndex);
+      }}
     />
   );
 }

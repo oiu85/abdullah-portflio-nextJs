@@ -56,6 +56,22 @@ export function Footer({ copy, email, socialItems }: FooterProps) {
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
               {copy.tagline}
             </p>
+            <p className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground/85">
+              <span className="mr-1">Command menu</span>
+              <kbd className="rounded border border-border/60 bg-muted/40 px-1.5 py-0.5 font-mono text-[0.65rem]">
+                Ctrl
+              </kbd>
+              <kbd className="rounded border border-border/60 bg-muted/40 px-1.5 py-0.5 font-mono text-[0.65rem]">
+                K
+              </kbd>
+              <span className="text-muted-foreground/50">/</span>
+              <kbd className="rounded border border-border/60 bg-muted/40 px-1.5 py-0.5 font-mono text-[0.65rem]">
+                ⌘
+              </kbd>
+              <kbd className="rounded border border-border/60 bg-muted/40 px-1.5 py-0.5 font-mono text-[0.65rem]">
+                K
+              </kbd>
+            </p>
           </div>
 
           <div className="space-y-4">

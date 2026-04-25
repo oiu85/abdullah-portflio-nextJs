@@ -23,7 +23,7 @@ export function HomeCtaSection({ contactCta }: HomeCtaSectionProps) {
     >
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-muted/30 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
-      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto w-full max-w-editorial px-4 sm:px-6 lg:px-8">
         <div className="glass-surface-strong mx-auto max-w-3xl rounded-3xl p-8 text-center transition-shadow duration-500 hover:shadow-card-hover md:p-12">
           <Reveal>
             <p className="mb-3 text-[0.7rem] font-medium uppercase tracking-eyebrow text-muted-foreground md:text-xs">
